@@ -1,11 +1,13 @@
-// import { Google } from "arctic";
+import { Google } from "arctic";
 import { Lucia, Session, User } from "lucia";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { db } from "@/lib/db";
+import { User as dbUser } from "@prisma/client";
 
 const adapter = new PrismaAdapter(db.session, db.user);
+
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     expires: false,
@@ -18,6 +20,7 @@ export const lucia = new Lucia(adapter, {
       id: dbUser.id,
       name: dbUser.name,
       email: dbUser.email,
+      image: dbUser.image,
     };
   },
 });
@@ -29,17 +32,13 @@ declare module "lucia" {
   }
 }
 
-interface DatabaseUserAttributes {
-  id: string;
-  name: string | null;
-  email: string;
-}
+type DatabaseUserAttributes = Pick<dbUser, "id" | "name" | "email" | "image">;
 
-// export const google = new Google(
-//   process.env.GOOGLE_CLIENT_ID!,
-//   process.env.GOOGLE_CLIENT_SECRET!,
-//   `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
-// );
+export const google = new Google(
+  process.env.GOOGLE_CLIENT_ID!,
+  process.env.GOOGLE_CLIENT_SECRET!,
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
+);
 
 export const getAuth = cache(
   async (): Promise<
@@ -62,7 +61,7 @@ export const getAuth = cache(
         cookies().set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes
+          sessionCookie.attributes,
         );
       }
 
@@ -71,11 +70,11 @@ export const getAuth = cache(
         cookies().set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes
+          sessionCookie.attributes,
         );
       }
     } catch {}
 
     return result;
-  }
+  },
 );

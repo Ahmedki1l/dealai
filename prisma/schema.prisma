@@ -17,8 +17,11 @@ model User {
   id       String    @id @map("_id")
   sessions Session[]
 
-  email    String @unique
-  password String
+  name     String
+  email    String  @unique
+  image    String?
+  password String? // creadentials
+  googleId String? @unique // googleAuth
 
   @@map("users")
 }

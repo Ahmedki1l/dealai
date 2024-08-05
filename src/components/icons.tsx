@@ -25,6 +25,7 @@ import {
   TimerOff,
   Timer,
   CalendarCheck2,
+  Facebook,
 } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
@@ -133,6 +134,9 @@ export const Icons = {
   ),
   store: ({ className, ...props }: IconProps) => (
     <Store className={cn(IconsVariants({}), className)} {...props} />
+  ),
+  facebook: ({ className, ...props }: IconProps) => (
+    <Facebook className={cn(IconsVariants({}), className)} {...props} />
   ),
   google: ({ className, ...props }: IconProps) => (
     <svg

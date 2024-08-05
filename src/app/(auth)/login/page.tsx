@@ -13,8 +13,8 @@ export default async function Login({}: LoginProps) {
     <div className="grid min-h-[700px] flex-1 items-center justify-center overflow-auto lg:grid-cols-2">
       {/* <BackButton variant="ghost" className="absolute right-4 top-4 gap-2" /> */}
 
-      <section className="bg-muted text-primary-foreground container relative hidden h-full flex-col p-10 lg:flex dark:border-r">
-        <div className="bg-primary absolute inset-0" />
+      <section className="container relative hidden h-full flex-col bg-[url('/images/login.png')] p-10 text-primary-foreground dark:border-r lg:flex">
+        <div className="absolute inset-0 bg-primary/30" />
         <p className="z-20 flex items-center text-lg font-medium">
           <Icons.logo />
           Acme Inc
@@ -34,26 +34,30 @@ export default async function Login({}: LoginProps) {
         </div>
       </section>
 
-      <section className="container mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+      <section className="container mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
+          <div className="mb-10">
+            <img src="/images/Takaml.png" className="object-cover" alt="" />
+          </div>
+          {/* 
           <h1 className="text-2xl font-semibold tracking-tight">
             Welcome Back! 🎉
-          </h1>
-          <p className="text-muted-foreground text-sm">
+          </h1> */}
+          {/* <p className="text-sm text-muted-foreground">
             Join our community and unlock amazing features to streamline your
             work and boost your productivity.
-          </p>
+          </p> */}
         </div>
         <div className="grid gap-6">
           <Suspense>
             <UserAuthLoginForm />
           </Suspense>
 
-          <p className="text-muted-foreground text-center text-sm">
+          <p className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="hover:text-primary underline underline-offset-4"
+              className="underline underline-offset-4 hover:text-primary"
             >
               Sign up
             </Link>{" "}

@@ -16,6 +16,7 @@ export default async function Home({}: HomeProps) {
       {user ? (
         <>
           <h1>Logged in as @{user?.name}</h1>
+          {user?.["image"] && <img src={user?.["image"]} />}
           <p>{user?.email}</p>
           <form
             action={async () => {
@@ -27,7 +28,7 @@ export default async function Home({}: HomeProps) {
           </form>
         </>
       ) : (
-        <Link href="/auth/login">login</Link>
+        <Link href="/login">login</Link>
       )}
     </div>
   );

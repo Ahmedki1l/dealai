@@ -26,29 +26,30 @@ type UserFormProps = {
 };
 
 export const UserForm = {
-  // name: function Component({ loading, form }: UserFormProps) {
-  //   return (
-  //     <FormField
-  //       control={form.control}
-  //       name="name"
-  //       render={({ field }) => (
-  //         <FormItem>
-  //           <FormLabel className="sr-only">name</FormLabel>
-  //           <FormControl>
-  //             {/* @ts-ignore */}
-  //             <Input
-  //               type="text"
-  //               placeholder="Joe Doe"
-  //               disabled={loading}
-  //               {...field}
-  //             />
-  //           </FormControl>
-  //           <FormMessage />
-  //         </FormItem>
-  //       )}
-  //     />
-  //   );
-  // },
+  name: function Component({ loading, form }: UserFormProps) {
+    return (
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Full Name</FormLabel>
+            <FormControl>
+              {/* @ts-ignore */}
+              <Input
+                type="text"
+                placeholder="Joe Doe"
+                disabled={loading}
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  },
+
   email: function Component({ loading, form }: UserFormProps) {
     return (
       <FormField
@@ -56,7 +57,7 @@ export const UserForm = {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="sr-only">email</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormControl>
               <Input
                 type="email"
@@ -81,7 +82,7 @@ export const UserForm = {
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="sr-only">password</FormLabel>
+            <FormLabel>Password</FormLabel>
             <FormControl>
               {/* @ts-ignore */}
               <Input

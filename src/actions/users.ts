@@ -7,6 +7,9 @@ import { generateIdFromEntropySize } from "lucia";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import * as z from "zod";
 
+import { google } from "@/lib/auth";
+import { generateCodeVerifier, generateState } from "arctic";
+
 import {
   userAuthRegisterSchema,
   userAuthLoginSchema,
@@ -15,10 +18,10 @@ import { lucia, getAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function signUpWithPassword(
-  credentials: z.infer<typeof userAuthRegisterSchema>
+  credentials: z.infer<typeof userAuthRegisterSchema>,
 ) {
   try {
-    const { email, password } = userAuthRegisterSchema.parse(credentials);
+    const { name, email, password } = userAuthRegisterSchema.parse(credentials);
     const passwordHash = await hash(password, {
       memoryCost: 19456,
       timeCost: 2,
@@ -43,6 +46,7 @@ export async function signUpWithPassword(
       data: {
         id: userId,
         email,
+        name,
         password: passwordHash,
       },
     });
@@ -52,7 +56,7 @@ export async function signUpWithPassword(
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
 
     return redirect("/login");
@@ -63,7 +67,7 @@ export async function signUpWithPassword(
 }
 
 export async function signInWithPassword(
-  credentials: z.infer<typeof userAuthLoginSchema>
+  credentials: z.infer<typeof userAuthLoginSchema>,
 ) {
   try {
     const { email, password } = userAuthLoginSchema.parse(credentials);
@@ -95,7 +99,7 @@ export async function signInWithPassword(
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
 
     return redirect("/");
@@ -104,6 +108,33 @@ export async function signInWithPassword(
 
     throw Error(error?.["message"] ?? "an error occured, try again.");
   }
+}
+
+export async function signInWithGoogle() {
+  const state = generateState();
+  const codeVerifier = generateCodeVerifier();
+
+  const url = await google.createAuthorizationURL(state, codeVerifier, {
+    scopes: ["profile", "email"],
+  });
+
+  cookies().set("state", state, {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 60 * 10,
+    sameSite: "lax",
+  });
+
+  cookies().set("code_verifier", codeVerifier, {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 60 * 10,
+    sameSite: "lax",
+  });
+
+  return redirect(url.toString());
 }
 
 export async function logout() {
@@ -116,7 +147,7 @@ export async function logout() {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
 
   return redirect("/login");

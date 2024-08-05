@@ -1,7 +1,7 @@
 import { z } from "@/lib/zod";
 
 export const userInsertSchema = z.object({
-  // name: z.string("name"),
+  name: z.string("name"),
   email: z.string("email").email("invalid email."),
   password: z
     .string("password")
@@ -15,7 +15,7 @@ export const userAuthLoginSchema = userInsertSchema.pick({
 });
 
 export const userAuthRegisterSchema = userInsertSchema.pick({
-  // name: true,
+  name: true,
   email: true,
   password: true,
 });
