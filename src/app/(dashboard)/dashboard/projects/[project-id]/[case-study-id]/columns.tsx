@@ -9,6 +9,9 @@ import { CaseStudy, Post } from "@prisma/client";
 import Link from "next/link";
 import { PostDeleteButton } from "@/components/post-delete-button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { CardDescription, CardTitle } from "@/components/ui/card";
+import { Avatar } from "@/components/avatar";
+import { Icons } from "@/components/icons";
 
 export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
   {
@@ -17,12 +20,24 @@ export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row: { original: r } }) => (
-      <Link
-        href={`/dashboard/projects/${r?.["projectId"]}/${r?.["caseStudyId"]}/${r?.["id"]}`}
-        className={buttonVariants({ variant: "link" })}
-      >
-        {r?.["title"]}
-      </Link>
+      <div className="flex items-center py-2">
+        <Avatar
+          user={{
+            name: r?.["title"],
+            image: r?.["image"],
+          }}
+          icon={{
+            name: "analytics",
+          }}
+        />
+
+        <Link
+          href={`/dashboard/projects/${r?.["projectId"]}/${r?.["caseStudyId"]}/${r?.["id"]}`}
+          className={buttonVariants({ variant: "link", className: "flex-col" })}
+        >
+          <CardTitle>{r?.["title"]}</CardTitle>
+        </Link>
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -31,6 +46,32 @@ export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
     accessorKey: "description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
+    ),
+    cell: ({ row: { original: r } }) => (
+      <CardDescription>{r?.["description"]}</CardDescription>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "accounts",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Platforms" />
+    ),
+    cell: ({ row: { original: r } }) => (
+      <div className="flex items-center gap-2">
+        {r?.["accounts"]?.map((e, i) =>
+          e === "FACEBOOK" ? (
+            <Icons.facebook key={i} />
+          ) : e === "INSTAGRAM" ? (
+            <Icons.instagram key={i} />
+          ) : e === "LINKEDIN" ? (
+            <Icons.linkedIn key={i} />
+          ) : (
+            "---"
+          ),
+        )}
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,

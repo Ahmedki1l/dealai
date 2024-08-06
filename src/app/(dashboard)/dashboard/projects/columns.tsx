@@ -27,7 +27,7 @@ import { CaseStudy, Post, Project } from "@prisma/client";
 import { ProjectUpdateForm } from "@/components/project-update-form";
 import Link from "next/link";
 import { ProjectDeleteButton } from "@/components/project-delete-button";
-import { CardDescription } from "@/components/ui/card";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 
 export const columns: ColumnDef<
   Project & { caseStudy: (CaseStudy & { posts: Post[] })[] }
@@ -45,7 +45,7 @@ export const columns: ColumnDef<
           className: "flex-col items-start justify-start",
         })}
       >
-        <span>{r?.["title"]}</span>
+        <CardTitle>{r?.["title"]}</CardTitle>
         <CardDescription>{r?.["description"]}</CardDescription>
         {/* <CardDescription>
           {[r?.["distinct"], r?.["city"], r?.["country"]].join(", ")}
@@ -102,6 +102,29 @@ export const columns: ColumnDef<
           0,
         )}
       </Link>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "accounts",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Platforms" />
+    ),
+    cell: ({ row: { original: r } }) => (
+      <div className="flex items-center gap-2">
+        {r?.["accounts"]?.map((e, i) =>
+          e === "FACEBOOK" ? (
+            <Icons.facebook key={i} />
+          ) : e === "INSTAGRAM" ? (
+            <Icons.instagram key={i} />
+          ) : e === "LINKEDIN" ? (
+            <Icons.linkedIn key={i} />
+          ) : (
+            "---"
+          ),
+        )}
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,

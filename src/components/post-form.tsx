@@ -11,27 +11,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  postCreateFormSchema,
   postCreateSchema,
   // postDeleteSchema,
   // postUpdateSchema,
 } from "@/validations/posts";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Icons } from "./icons";
-import { format } from "date-fns";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
 import { DateTimePicker } from "./ui/datetime-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type PostFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    z.infer<typeof postCreateSchema>,
+    z.infer<typeof postCreateFormSchema>,
     // | z.infer<typeof postUpdateSchema>
     // | z.infer<typeof postDeleteSchema>
     any,
@@ -101,6 +101,55 @@ export const PostForm = {
       )}
     />
   ),
+  accounts: ({
+    loading,
+    form,
+    accounts: { fields, remove },
+  }: PostFormProps & {
+    accounts: UseFieldArrayReturn<any, "accounts", "id">;
+  }) =>
+    fields.map((field, i) => (
+      <FormField
+        control={form.control}
+        key={i}
+        name={`accounts.${i}.value`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="sr-only">Platfrms</FormLabel>
+            <FormControl>
+              <div className="flex items-center justify-center gap-2">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={loading}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your platform" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="FACEBOOK">Facebook</SelectItem>
+                    <SelectItem value="INSTAGRAM">Instagram</SelectItem>
+                    <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => remove(i)}
+                >
+                  <Icons.x />
+                </Button>
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    )),
   postAt: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}

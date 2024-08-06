@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,18 @@ import { Form } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { postCreateSchema } from "@/validations/posts";
+import { postCreateFormSchema, postCreateSchema } from "@/validations/posts";
 import { createPost } from "@/actions/posts";
 import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { CaseStudy } from "@prisma/client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 type PostCreateButtonProps = { caseStudy: CaseStudy } & DialogResponsiveProps;
 
@@ -25,28 +32,39 @@ export function PostCreateButton({
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof postCreateSchema>>({
-    resolver: zodResolver(postCreateSchema),
+  const form = useForm<z.infer<typeof postCreateFormSchema>>({
+    resolver: zodResolver(postCreateFormSchema),
     defaultValues: {
       caseStudyId: caseStudy?.["id"],
       title: undefined,
       description: undefined,
       imageDescription: undefined,
       postAt: undefined,
+      accounts: [],
     },
   });
+  const accounts = useFieldArray({
+    name: "accounts",
+    control: form.control,
+  });
 
-  function onSubmit(data: z.infer<typeof postCreateSchema>) {
+  function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-    toast.promise(createPost(data), {
-      finally: () => setLoading(false),
-      error: (err) => err?.["message"],
-      success: () => {
-        router.refresh();
-        form.reset();
-        return "created successfully.";
+    toast.promise(
+      createPost({
+        ...data,
+        accounts: data?.["accounts"].map((p) => p?.["value"]),
+      }),
+      {
+        finally: () => setLoading(false),
+        error: (err) => err?.["message"],
+        success: () => {
+          router.refresh();
+          form.reset();
+          return "created successfully.";
+        },
       },
-    });
+    );
   }
 
   return (
@@ -73,8 +91,38 @@ export function PostCreateButton({
               <PostForm.title form={form as any} loading={loading} />
               <PostForm.description form={form as any} loading={loading} />
               <PostForm.imageDescription form={form as any} loading={loading} />
-              {/* <PostForm.imageDescription form={form as any} loading={loading} /> */}
               <PostForm.postAt form={form as any} loading={loading} />
+
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Platforms</CardTitle>
+                      <CardDescription>
+                        Add account number to your project so patients reach you
+                        fast.
+                      </CardDescription>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => accounts?.append({ value: "FACEBOOK" })}
+                      disabled={accounts?.fields?.["length"] == 4}
+                    >
+                      <Icons.add />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <PostForm.accounts
+                    accounts={accounts}
+                    form={form as any}
+                    loading={loading}
+                  />
+                </CardContent>
+              </Card>
             </form>
           </Form>
         </>

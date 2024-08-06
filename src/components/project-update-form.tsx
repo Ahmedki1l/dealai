@@ -42,9 +42,8 @@ export function ProjectUpdateForm({
       // country: project?.["country"] ?? "",
       // zip: project?.["zip"] ?? "",
       accounts:
-        projectAccounts &&
-        Array.isArray(JSON.parse(projectAccounts?.toString() ?? ""))
-          ? JSON.parse(projectAccounts?.toString())?.map((p: string) => ({
+        projectAccounts && Array.isArray(projectAccounts)
+          ? projectAccounts?.map((p) => ({
               value: p,
             }))
           : [],
@@ -120,7 +119,7 @@ export function ProjectUpdateForm({
                       type="button"
                       variant="outline"
                       size="icon"
-                      onClick={() => accounts?.append({ value: "" })}
+                      onClick={() => accounts?.append({ value: "FACEBOOK" })}
                       disabled={accounts?.fields?.["length"] == 4}
                     >
                       <Icons.add />

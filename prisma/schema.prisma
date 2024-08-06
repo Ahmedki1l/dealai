@@ -40,7 +40,7 @@ model Session {
 enum Account {
   FACEBOOK
   LINKEDIN
-  INSTEGRAM
+  INSTAGRAM
 }
 
 model Project {

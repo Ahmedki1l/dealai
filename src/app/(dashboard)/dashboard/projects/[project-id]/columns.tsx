@@ -19,6 +19,7 @@ import Link from "next/link";
 import { CaseStudyUpdateForm } from "@/components/case-study-update-form";
 import { CaseStudyDeleteButton } from "@/components/case-study-delete-button";
 import { Icons } from "@/components/icons";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 
 export const columns: ColumnDef<CaseStudy & { posts: Post[] }>[] = [
   {
@@ -29,9 +30,16 @@ export const columns: ColumnDef<CaseStudy & { posts: Post[] }>[] = [
     cell: ({ row: { original: r } }) => (
       <Link
         href={`/dashboard/projects/${r?.["projectId"]}/${r?.["id"]}`}
-        className={buttonVariants({ variant: "link" })}
+        className={buttonVariants({
+          variant: "link",
+          className: "flex-col items-start justify-start",
+        })}
       >
-        {r?.["title"]}
+        <CardTitle>{r?.["title"]}</CardTitle>
+        <CardDescription>{r?.["description"]}</CardDescription>
+        {/* <CardDescription>
+              {[r?.["distinct"], r?.["city"], r?.["country"]].join(", ")}
+            </CardDescription> */}
       </Link>
     ),
     enableSorting: false,

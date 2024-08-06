@@ -13,7 +13,6 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function Dashboard({}: DashboardProps) {
   const user = (await getAuth())?.["user"]!;
   const projects = await db.project.findMany({
-    include: { caseStudy: { include: { posts: true } } },
     where: {
       userId: user?.["id"],
     },

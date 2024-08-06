@@ -22,6 +22,14 @@ import {
   // projectUpdateSchema,
 } from "@/validations/projects";
 import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 type ProjectFormProps = {
   loading: boolean;
   form: UseFormReturn<
@@ -195,7 +203,23 @@ export const ProjectForm = {
             <FormLabel className="sr-only">Platfrms</FormLabel>
             <FormControl>
               <div className="flex items-center justify-center gap-2">
-                <Input type="text" disabled={loading} {...field} />
+                {/* <Input type="text" disabled={loading} {...field} /> */}
+
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your platform" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="FACEBOOK">Facebook</SelectItem>
+                    <SelectItem value="INSTAGRAM">Instagram</SelectItem>
+                    <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
+                  </SelectContent>
+                </Select>
 
                 <Button
                   type="button"

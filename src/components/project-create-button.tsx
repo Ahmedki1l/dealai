@@ -118,7 +118,7 @@ export function ProjectCreateButton({
                       type="button"
                       variant="outline"
                       size="icon"
-                      onClick={() => accounts?.append({ value: "" })}
+                      onClick={() => accounts?.append({ value: "FACEBOOK" })}
                       disabled={accounts?.fields?.["length"] == 4}
                     >
                       <Icons.add />

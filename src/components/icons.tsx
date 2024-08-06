@@ -26,6 +26,8 @@ import {
   Timer,
   CalendarCheck2,
   Facebook,
+  Instagram,
+  Linkedin,
 } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
@@ -139,7 +141,26 @@ export const Icons = {
     <Store className={cn(IconsVariants({}), className)} {...props} />
   ),
   facebook: ({ className, ...props }: IconProps) => (
-    <Facebook className={cn(IconsVariants({}), className)} {...props} />
+    <Facebook
+      className={cn(
+        IconsVariants({}),
+        "rounded-full bg-blue-600 p-0.5 text-primary-foreground",
+        className,
+      )}
+      {...props}
+    />
+  ),
+  instagram: ({ className, ...props }: IconProps) => (
+    <Instagram
+      className={cn(IconsVariants({}), "stroke-pink-700", className)}
+      {...props}
+    />
+  ),
+  linkedIn: ({ className, ...props }: IconProps) => (
+    <Linkedin
+      className={cn(IconsVariants({}), "stroke-blue-600", className)}
+      {...props}
+    />
   ),
   google: ({ className, ...props }: IconProps) => (
     <svg
