@@ -30,6 +30,7 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
+import { DetailedHTMLProps, ImgHTMLAttributes } from "react";
 
 export const IconsVariants = cva("w-4 h-4 shrink-0");
 export type IconProps = {} & LucideProps & VariantProps<typeof IconsVariants>;
@@ -37,19 +38,21 @@ export type Icon = keyof typeof Icons;
 
 export const Icons = {
   logo: ({ className, ...props }: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <img
+      src="/icon.png"
+      alt=""
       className={cn(IconsVariants({}), "mr-2 h-6 w-6", className)}
-      {...props}
-    >
-      <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-    </svg>
+      // {...props}
+    />
+  ),
+
+  fullLogo: ({ className, ...props }: IconProps) => (
+    <img
+      src="/logo.png"
+      alt=""
+      className={cn(IconsVariants({}), "mr-2 h-6 w-6", className)}
+      // {...props}
+    />
   ),
   spinner: ({ className, ...props }: IconProps) => (
     <Loader2

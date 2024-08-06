@@ -89,7 +89,7 @@ export default async function Register({}: RegisterProps) {
             </div>
           </div>
 
-          <p className="text-center text-sm text-muted-foreground">
+          {/* <p className="text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link
               href="/terms"
@@ -105,7 +105,7 @@ export default async function Register({}: RegisterProps) {
               Privacy Policy
             </Link>
             .
-          </p>
+          </p> */}
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
