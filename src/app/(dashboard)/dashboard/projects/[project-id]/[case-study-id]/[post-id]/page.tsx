@@ -136,10 +136,10 @@ export default async function CaseStudy({
                   </CardDescription>
                 </div>
 
-                <div>
+                {/* <div>
                   <Label className="text-md font-bold">Accounts</Label>
                   <CardDescription>{post?.["accounts"]}</CardDescription>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </div>

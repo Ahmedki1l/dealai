@@ -4,13 +4,13 @@ export const projectInsertSchema = z.object({
   id: z.string("id"),
   userId: z.string("userId"),
   title: z.string("title"),
-  description: z.string("description"),
+  description: z.string("description").optional(),
   distinct: z.string("distinct"),
   city: z.string("city"),
   country: z.string("country"),
   type: z.string("type"),
   spaces: z.string("spaces"),
-  accounts: z.array(z.enum(["FACEBOOK", "INSTAGRAM", "LINKEDIN"])),
+  accounts: z.array(z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"])),
 });
 
 export const projectCreateSchema = projectInsertSchema.omit({ id: true });
@@ -20,7 +20,7 @@ export const projectCreateFormSchema = projectCreateSchema
     z.object({
       accounts: z.array(
         z.object({
-          value: z.enum(["FACEBOOK", "INSTAGRAM", "LINKEDIN"]),
+          value: z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"]),
         }),
       ),
     }),
@@ -32,7 +32,7 @@ export const projectUpdateFormSchema = projectUpdateSchema
     z.object({
       accounts: z.array(
         z.object({
-          value: z.enum(["FACEBOOK", "INSTAGRAM", "LINKEDIN"]),
+          value: z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"]),
         }),
       ),
     }),

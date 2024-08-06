@@ -46,28 +46,26 @@ export function PostCreateButton({
       noOfWeeks: undefined,
       imageDescription: undefined,
       postAt: undefined,
-      accounts: [],
+      title:'X',
+      platform: 'Y',
     },
   });
 
-  const accounts = useFieldArray({
-    name: "accounts",
-    control: form.control,
-  });
+  
 
   console.log(form.formState.errors);
 
   async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-
+    let weeks = data.noOfWeeks ? parseInt(data.noOfWeeks, 10) : 0;
     const result = {
-      input: `create a social media content plan for a period of 2 weeks, for the platforms ${project.accounts}.`,
+      input: `create a social media content plan that consists of ${3*weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
     };
 
     console.log(JSON.stringify(result));
 
     // Define the endpoint URL
-    const endpoint = "http://127.0.0.1:5000/chat/casestudy";
+    const endpoint = "http://127.0.0.1:5000/chat/socialmediaplan";
 
     try {
       // Send data to the server
@@ -81,17 +79,20 @@ export function PostCreateButton({
 
       // Handle response from the server
       const responseData = await response.json();
+      console.log(responseData);
 
       project.accounts.forEach((acc) => {
-        let posts = responseData["Facebook"];
+        let posts = responseData[acc.toString()];
         let i = 0;
         (posts as any[]).forEach((post) => {
           i++;
-          data.content = post[`Post${i}`];
+          let name = `Post${i}`;
+          data.title = name;
+          data.platform = acc.toString();
+          data.content = post[name];
           toast.promise(
             createPost({
               ...data,
-              accounts: [acc],
             }),
             { error: (err) => err?.["message"] },
           );
@@ -131,7 +132,7 @@ export function PostCreateButton({
               <PostForm.imageDescription form={form as any} loading={loading} />
               <PostForm.noOfWeeks form={form as any} loading={loading} />
 
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
@@ -160,7 +161,7 @@ export function PostCreateButton({
                     loading={loading}
                   />
                 </CardContent>
-              </Card>
+              </Card> */}
             </form>
           </Form>
         </>

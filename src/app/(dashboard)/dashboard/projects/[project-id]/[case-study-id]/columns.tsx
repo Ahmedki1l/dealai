@@ -60,17 +60,19 @@ export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
     ),
     cell: ({ row: { original: r } }) => (
       <div className="flex items-center gap-2">
-        {r?.["accounts"]?.map((e, i) =>
-          e === "FACEBOOK" ? (
-            <Icons.facebook key={i} />
-          ) : e === "INSTAGRAM" ? (
-            <Icons.instagram key={i} />
-          ) : e === "LINKEDIN" ? (
-            <Icons.linkedIn key={i} />
-          ) : (
+        {
+          r?.["platform"] === "Facebook" ? (
+            <Icons.facebook  />
+          ) : r?.["platform"] === "Instagram" ? (
+            <Icons.instagram />
+          ) : r?.["platform"] === "LinkedIn" ? (
+            <Icons.linkedIn />
+          ) : r?.["platform"] === "Twitter" ? (
+            <Icons.twitter />
+          ): (
             "---"
-          ),
-        )}
+          )
+        }
       </div>
     ),
     enableSorting: false,

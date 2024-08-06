@@ -122,55 +122,55 @@ export const PostForm = {
       )}
     />
   ),
-  accounts: ({
-    loading,
-    form,
-    accounts: { fields, remove },
-  }: PostFormProps & {
-    accounts: UseFieldArrayReturn<any, "accounts", "id">;
-  }) =>
-    fields.map((field, i) => (
-      <FormField
-        control={form.control}
-        key={i}
-        name={`accounts.${i}.value`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="sr-only">Platfrms</FormLabel>
-            <FormControl>
-              <div className="flex items-center justify-center gap-2">
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={loading}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your platform" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="FACEBOOK">Facebook</SelectItem>
-                    <SelectItem value="INSTAGRAM">Instagram</SelectItem>
-                    <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
-                  </SelectContent>
-                </Select>
+  // accounts: ({
+  //   loading,
+  //   form,
+  //   accounts: { fields, remove },
+  // }: PostFormProps & {
+  //   accounts: UseFieldArrayReturn<any, "accounts", "id">;
+  // }) =>
+  //   fields.map((field, i) => (
+  //     <FormField
+  //       control={form.control}
+  //       key={i}
+  //       name={`accounts.${i}.value`}
+  //       render={({ field }) => (
+  //         <FormItem>
+  //           <FormLabel className="sr-only">Platfrms</FormLabel>
+  //           <FormControl>
+  //             <div className="flex items-center justify-center gap-2">
+  //               <Select
+  //                 onValueChange={field.onChange}
+  //                 defaultValue={field.value}
+  //                 disabled={loading}
+  //               >
+  //                 <FormControl>
+  //                   <SelectTrigger>
+  //                     <SelectValue placeholder="Select your platform" />
+  //                   </SelectTrigger>
+  //                 </FormControl>
+  //                 <SelectContent>
+  //                   <SelectItem value="FACEBOOK">Facebook</SelectItem>
+  //                   <SelectItem value="INSTAGRAM">Instagram</SelectItem>
+  //                   <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
+  //                 </SelectContent>
+  //               </Select>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => remove(i)}
-                >
-                  <Icons.x />
-                </Button>
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    )),
+  //               <Button
+  //                 type="button"
+  //                 variant="outline"
+  //                 size="icon"
+  //                 onClick={() => remove(i)}
+  //               >
+  //                 <Icons.x />
+  //               </Button>
+  //             </div>
+  //           </FormControl>
+  //           <FormMessage />
+  //         </FormItem>
+  //       )}
+  //     />
+  //   )),
   postAt: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}

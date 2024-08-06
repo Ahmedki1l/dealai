@@ -46,7 +46,6 @@ export const columns: ColumnDef<
         })}
       >
         <CardTitle>{r?.["title"]}</CardTitle>
-        <CardDescription>{r?.["description"]}</CardDescription>
         {/* <CardDescription>
           {[r?.["distinct"], r?.["city"], r?.["country"]].join(", ")}
         </CardDescription> */}
@@ -114,13 +113,15 @@ export const columns: ColumnDef<
     cell: ({ row: { original: r } }) => (
       <div className="flex items-center gap-2">
         {r?.["accounts"]?.map((e, i) =>
-          e === "FACEBOOK" ? (
+          e === "Facebook" ? (
             <Icons.facebook key={i} />
-          ) : e === "INSTAGRAM" ? (
+          ) : e === "Instagram" ? (
             <Icons.instagram key={i} />
-          ) : e === "LINKEDIN" ? (
+          ) : e === "LinkedIn" ? (
             <Icons.linkedIn key={i} />
-          ) : (
+          ) : e === "Twitter" ? (
+            <Icons.twitter key={i} />
+          ): (
             "---"
           ),
         )}

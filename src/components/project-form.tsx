@@ -215,9 +215,10 @@ export const ProjectForm = {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="FACEBOOK">Facebook</SelectItem>
-                    <SelectItem value="INSTAGRAM">Instagram</SelectItem>
-                    <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
+                    <SelectItem value="Facebook">Facebook</SelectItem>
+                    <SelectItem value="Instagram">Instagram</SelectItem>
+                    <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                    <SelectItem value="Twitter">Twitter</SelectItem>
                   </SelectContent>
                 </Select>
 

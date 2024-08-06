@@ -28,6 +28,7 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Twitter
 } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
@@ -158,6 +159,12 @@ export const Icons = {
   ),
   linkedIn: ({ className, ...props }: IconProps) => (
     <Linkedin
+      className={cn(IconsVariants({}), "stroke-blue-600", className)}
+      {...props}
+    />
+  ),
+  twitter: ({ className, ...props }: IconProps) => (
+    <Twitter
       className={cn(IconsVariants({}), "stroke-blue-600", className)}
       {...props}
     />

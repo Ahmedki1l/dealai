@@ -38,16 +38,17 @@ model Session {
 }
 
 enum Account {
-  FACEBOOK
-  LINKEDIN
-  INSTAGRAM
+  Facebook
+  LinkedIn
+  Instagram
+  Twitter
 }
 
 model Project {
   id          String @id @map("_id")
   userId      String
   title       String
-  description String
+  description String?
 
   country  String
   city     String
@@ -67,10 +68,9 @@ model CaseStudy {
   id          String @id @map("_id")
   projectId   String
   title       String
-  description String
+  description String?
 
   content        String?
-  noOfWeeks      String?
   targetAudience String? @map("target-audience")
   pros           String? @map("pros")
   cons           String? @map("cons")
@@ -87,12 +87,14 @@ model Post {
   id               String  @id @map("_id")
   caseStudyId      String
   title            String?
-  description      String
-  imageDescription String
+  description      String?
+  imageDescription String?
 
+  noOfWeeks        String?
   content  String?
   image    String?
-  accounts Account[]
+
+  platform    String
 
   postAt    DateTime?
   createdAt DateTime  @default(now())
