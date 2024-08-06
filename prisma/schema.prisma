@@ -71,7 +71,8 @@ model CaseStudy {
 
   content        String?
   targetAudience String? @map("target-audience")
-  prosNcons      String? @map("pros-cons")
+  pros      String? @map("pros")
+  cons      String? @map("cons")
   hashtags       String?
 
   posts Post[]

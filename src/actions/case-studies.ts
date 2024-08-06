@@ -10,7 +10,6 @@ import {
 import {
   caseStudyCreateSchema,
   caseStudyDeleteSchema,
-  // caseStudyDeleteSchema,
   caseStudyUpdateSchema,
 } from "@/validations/case-studies";
 import { revalidatePath } from "next/cache";
@@ -18,7 +17,7 @@ import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
 
 export async function createCaseStudy(
-  data: z.infer<typeof caseStudyCreateSchema>,
+  newData: z.infer<typeof caseStudyCreateSchema>,
 ) {
   try {
     const user = await getAuth();
@@ -30,7 +29,7 @@ export async function createCaseStudy(
     await db.caseStudy.create({
       data: {
         id,
-        ...data,
+        ...newData,
       },
     });
 

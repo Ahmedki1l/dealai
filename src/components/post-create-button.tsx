@@ -15,6 +15,7 @@ import { createPost } from "@/actions/posts";
 import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { CaseStudy } from "@prisma/client";
+import { Project } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -22,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { db } from "@/lib/db";
 
 type PostCreateButtonProps = { caseStudy: CaseStudy } & DialogResponsiveProps;
 
@@ -43,28 +45,56 @@ export function PostCreateButton({
       accounts: [],
     },
   });
+
   const accounts = useFieldArray({
     name: "accounts",
     control: form.control,
   });
 
-  function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
+  async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-    toast.promise(
-      createPost({
-        ...data,
-        accounts: data?.["accounts"].map((p) => p?.["value"]),
-      }),
-      {
-        finally: () => setLoading(false),
-        error: (err) => err?.["message"],
-        success: () => {
-          router.refresh();
-          form.reset();
-          return "created successfully.";
+
+    const result = {
+      input: `create a casestudy about ${data.title}, ${data.description}.`,
+    };
+    console.log(JSON.stringify(result));
+
+    // Define the endpoint URL
+    const endpoint = "http://127.0.0.1:5000/chat/casestudy";
+
+    try {
+      // Send data to the server
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      },
-    );
+        body: JSON.stringify(result),
+      });
+
+      // Handle response from the server
+      const responseData = await response.json();
+      console.log("Response from server:", responseData);
+
+      toast.promise(
+        createPost({
+          ...data,
+          accounts: data?.["accounts"].map((p) => p?.["value"]),
+        }),
+        {
+          finally: () => setLoading(false),
+          error: (err) => err?.["message"],
+          success: () => {
+            router.refresh();
+            form.reset();
+            return "created successfully.";
+          },
+        },
+      );
+    } catch (error) {
+      console.error("Error sending data to the server:", error);
+      setLoading(false); // Ensure loading is false on error
+    }
   }
 
   return (
@@ -88,10 +118,8 @@ export function PostCreateButton({
               onSubmit={form.handleSubmit(onSubmit)}
               className="container space-y-2 md:p-0"
             >
-              <PostForm.title form={form as any} loading={loading} />
               <PostForm.description form={form as any} loading={loading} />
               <PostForm.imageDescription form={form as any} loading={loading} />
-              <PostForm.postAt form={form as any} loading={loading} />
 
               <Card>
                 <CardHeader>

@@ -8,6 +8,8 @@ export const postInsertSchema = z.object({
   imageDescription: z.string("image description"),
   postAt: z.date("postAt"),
   accounts: z.array(z.enum(["FACEBOOK", "INSTAGRAM", "LINKEDIN"])),
+  content: z.string("content").optional(),
+  image: z.string("image").optional(),
 });
 
 export const postCreateSchema = postInsertSchema.omit({ id: true });

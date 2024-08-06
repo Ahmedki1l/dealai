@@ -86,31 +86,25 @@ export default async function CaseStudy({
             <AccordionItem value="content">
               <AccordionTrigger>Case Study Content</AccordionTrigger>
               <AccordionContent>
-                {caseStudy?.["content"]} Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Eaque natus, repellendus repudiandae, illum
-                repellat impedit, quod cum laborum ducimus similique commodi
-                reiciendis. Ea quaerat quae deleniti saepe provident cum
-                voluptatibus.
+                {caseStudy?.["content"]}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="target-audience">
               <AccordionTrigger>Target Audience</AccordionTrigger>
               <AccordionContent>
-                {caseStudy?.["targetAudience"]} Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Eaque natus, repellendus
-                repudiandae, illum repellat impedit, quod cum laborum ducimus
-                similique commodi reiciendis. Ea quaerat quae deleniti saepe
-                provident cum voluptatibus.
+                {caseStudy?.["targetAudience"]}
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="prosNcons">
-              <AccordionTrigger>Pros & Cons</AccordionTrigger>
+            <AccordionItem value="pros">
+              <AccordionTrigger>Pros</AccordionTrigger>
               <AccordionContent>
-                {caseStudy?.["prosNcons"]} Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Eaque natus, repellendus
-                repudiandae, illum repellat impedit, quod cum laborum ducimus
-                similique commodi reiciendis. Ea quaerat quae deleniti saepe
-                provident cum voluptatibus.
+                {caseStudy?.["prosNcons"]} 
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="cons">
+              <AccordionTrigger>Cons</AccordionTrigger>
+              <AccordionContent>
+                {caseStudy?.["cons"]} 
               </AccordionContent>
             </AccordionItem>
           </Accordion>

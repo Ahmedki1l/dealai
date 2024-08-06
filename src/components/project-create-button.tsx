@@ -53,23 +53,50 @@ export function ProjectCreateButton({
     control: form.control,
   });
 
-  function onSubmit(data: z.infer<typeof projectCreateFormSchema>) {
+  async function onSubmit(data: z.infer<typeof projectCreateFormSchema>) {
     setLoading(true);
-    toast.promise(
-      createProject({
-        ...data,
-        accounts: data?.["accounts"].map((p) => p?.["value"]),
-      }),
-      {
-        finally: () => setLoading(false),
-        error: (err) => err?.["message"],
-        success: () => {
-          router.refresh();
-          form.reset();
-          return "created successfully.";
+    const result = {
+      input:`create a casestudy about ${data.title} ${data.type} located in: ${data.distinct}, ${data.city}, ${data.country}, which has a land space of: ${data.spaces}, ${data.description}. Create the Hashtags for ${data.accounts}`
+    }
+    console.log(JSON.stringify(result));
+
+    // Define the endpoint URL
+    const endpoint = 'http://127.0.0.1:5000/chat/casestudy';
+
+    try {
+      // Send data to the server
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-      },
-    );
+        body: JSON.stringify(result)
+      });
+
+      // Handle response from the server
+      const responseData = await response.json();
+      console.log('Response from server:', responseData);
+
+      // Execute project creation if the above request is successful
+      toast.promise(
+        createProject({
+          ...data,
+          accounts: data.accounts.map((account) => account.value),
+        }),
+        {
+          finally: () => setLoading(false),
+          error: (err) => err?.["message"],
+          success: () => {
+            router.refresh();
+            form.reset();
+            return "Project created successfully.";
+          },
+        },
+      );
+    } catch (error) {
+      console.error('Error sending data to the server:', error);
+      setLoading(false); // Ensure loading is false on error
+    }
   }
 
   return (

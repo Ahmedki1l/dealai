@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { db } from "@/lib/db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,6 +26,7 @@ import {
 import { CaseStudyForm } from "@/components/case-study-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { Project } from "@prisma/client";
+import { id } from "date-fns/locale";
 
 type CaseStudyCreateButtonProps = { project: Project } & DialogResponsiveProps;
 
@@ -44,17 +46,47 @@ export function CaseStudyCreateButton({
     },
   });
 
-  function onSubmit(data: z.infer<typeof caseStudyCreateSchema>) {
+  async function onSubmit(data: z.infer<typeof caseStudyCreateSchema>) {
     setLoading(true);
-    toast.promise(createCaseStudy(data), {
-      finally: () => setLoading(false),
-      error: (err) => err?.["message"],
-      success: () => {
-        router.refresh();
-        form.reset();
-        return "created successfully.";
-      },
-    });
+
+    const result = {
+      input:`create a casestudy about ${data.title}, ${data.description}.`
+    }
+    console.log(JSON.stringify(result));
+
+    // Define the endpoint URL
+    const endpoint = 'http://127.0.0.1:5000/chat/casestudy';
+
+    try {
+      // Send data to the server
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(result)
+      });
+
+      // Handle response from the server
+      const responseData = await response.json();
+      console.log('Response from server:', responseData);
+      data.content = responseData['Case_Study'];
+      data.targetAudience = responseData['Target_Audience'];
+      data.pros = responseData['Pros'];
+      data.cons = responseData['Cons'];
+      toast.promise(createCaseStudy(data), {
+        finally: () => setLoading(false),
+        error: (err) => err?.["message"],
+        success: () => {
+          router.refresh();
+          form.reset();
+          return "created successfully.";
+        },
+      });
+    } catch (error) {
+      console.error('Error sending data to the server:', error);
+      setLoading(false); // Ensure loading is false on error
+    }
   }
 
   return (
