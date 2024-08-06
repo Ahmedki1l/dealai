@@ -85,7 +85,7 @@ model CaseStudy {
 model Post {
   id               String @id @map("_id")
   caseStudyId      String
-  title            String
+  title            String?
   description      String
   imageDescription String
 
@@ -93,7 +93,7 @@ model Post {
   image    String?
   accounts Account[]
 
-  postAt    DateTime
+  postAt    DateTime?
   createdAt DateTime @default(now())
 
   caseStudy CaseStudy @relation(references: [id], fields: [caseStudyId], onDelete: Cascade)

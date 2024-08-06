@@ -25,10 +25,11 @@ import {
 } from "./ui/card";
 import { db } from "@/lib/db";
 
-type PostCreateButtonProps = { caseStudy: CaseStudy } & DialogResponsiveProps;
+type PostCreateButtonProps = { caseStudy: CaseStudy, project: Project } & DialogResponsiveProps;
 
 export function PostCreateButton({
   caseStudy,
+  project,
   ...props
 }: PostCreateButtonProps) {
   const router = useRouter();
@@ -51,12 +52,15 @@ export function PostCreateButton({
     control: form.control,
   });
 
+  console.log(form.formState.errors);
+
   async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
 
     const result = {
-      input: `create a casestudy about ${data.title}, ${data.description}.`,
+      input: `create a social media content plan for a period of 2 weeks, for the platforms ${project.accounts}.`,
     };
+
     console.log(JSON.stringify(result));
 
     // Define the endpoint URL
@@ -76,21 +80,37 @@ export function PostCreateButton({
       const responseData = await response.json();
       console.log("Response from server:", responseData);
 
-      toast.promise(
-        createPost({
-          ...data,
-          accounts: data?.["accounts"].map((p) => p?.["value"]),
-        }),
-        {
-          finally: () => setLoading(false),
-          error: (err) => err?.["message"],
-          success: () => {
-            router.refresh();
-            form.reset();
-            return "created successfully.";
-          },
-        },
-      );
+
+      //console.log("Post 1:", responseData['Facebook'][0]['Post1']);
+      console.log(project);
+      project.accounts.forEach((acc)=>{
+        let posts = responseData['Facebook'];
+        console.log("posts: ", posts);
+        let i = 0;
+        posts.forEach(post=>{
+          i++;
+          data.content = post[`Post${i}`];
+          console.log("data: ", post);
+          toast.promise(
+            createPost({
+              ...data,
+              accounts: data?.["accounts"].map((p) => p?.["value"]),
+            }),
+            {
+              error: (err) => err?.["message"],
+              success: () => {
+                router.refresh();
+                form.reset();
+                return "created successfully.";
+              },
+            },
+          );
+        });
+      });
+      
+
+
+      setLoading(false);
     } catch (error) {
       console.error("Error sending data to the server:", error);
       setLoading(false); // Ensure loading is false on error

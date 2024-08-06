@@ -3,10 +3,10 @@ import { z } from "@/lib/zod";
 export const postInsertSchema = z.object({
   id: z.string("id"),
   caseStudyId: z.string("caseStudyId"),
-  title: z.string("title"),
+  title: z.string("title").optional(),
   description: z.string("description"),
   imageDescription: z.string("image description"),
-  postAt: z.date("postAt"),
+  postAt: z.date("postAt").optional(),
   accounts: z.array(z.enum(["FACEBOOK", "INSTAGRAM", "LINKEDIN"])),
   content: z.string("content").optional(),
   image: z.string("image").optional(),

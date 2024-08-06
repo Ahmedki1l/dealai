@@ -98,7 +98,7 @@ export default async function CaseStudy({
             <AccordionItem value="pros">
               <AccordionTrigger>Pros</AccordionTrigger>
               <AccordionContent>
-                {caseStudy?.["prosNcons"]} 
+                {caseStudy?.["pros"]} 
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="cons">
@@ -120,7 +120,7 @@ export default async function CaseStudy({
           </div>
 
           <div>
-            <PostCreateButton caseStudy={caseStudy}>
+            <PostCreateButton caseStudy={caseStudy} project={caseStudy.project}>
               <Button>Create Post</Button>
             </PostCreateButton>
           </div>

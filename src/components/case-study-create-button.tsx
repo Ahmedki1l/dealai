@@ -50,7 +50,7 @@ export function CaseStudyCreateButton({
     setLoading(true);
 
     const result = {
-      input:`create a casestudy about ${data.title}, ${data.description}.`
+      input:`create a casestudy about ${project.title} ${project.type} located in: ${project.distinct}, ${project.city}, ${project.country}, which has a land space of: ${project.spaces}, ${project.description}. Create the Hashtags for ${project.accounts}`
     }
     console.log(JSON.stringify(result));
 
