@@ -70,9 +70,10 @@ model CaseStudy {
   description String
 
   content        String?
+  noOfWeeks      String?
   targetAudience String? @map("target-audience")
-  pros      String? @map("pros")
-  cons      String? @map("cons")
+  pros           String? @map("pros")
+  cons           String? @map("cons")
   hashtags       String?
 
   posts Post[]
@@ -83,7 +84,7 @@ model CaseStudy {
 }
 
 model Post {
-  id               String @id @map("_id")
+  id               String  @id @map("_id")
   caseStudyId      String
   title            String?
   description      String
@@ -94,7 +95,7 @@ model Post {
   accounts Account[]
 
   postAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   caseStudy CaseStudy @relation(references: [id], fields: [caseStudyId], onDelete: Cascade)
 

@@ -25,7 +25,10 @@ import {
 } from "./ui/card";
 import { db } from "@/lib/db";
 
-type PostCreateButtonProps = { caseStudy: CaseStudy, project: Project } & DialogResponsiveProps;
+type PostCreateButtonProps = {
+  caseStudy: CaseStudy;
+  project: Project;
+} & DialogResponsiveProps;
 
 export function PostCreateButton({
   caseStudy,
@@ -39,8 +42,8 @@ export function PostCreateButton({
     resolver: zodResolver(postCreateFormSchema),
     defaultValues: {
       caseStudyId: caseStudy?.["id"],
-      title: undefined,
       description: undefined,
+      noOfWeeks: undefined,
       imageDescription: undefined,
       postAt: undefined,
       accounts: [],
@@ -78,38 +81,24 @@ export function PostCreateButton({
 
       // Handle response from the server
       const responseData = await response.json();
-      console.log("Response from server:", responseData);
 
-
-      //console.log("Post 1:", responseData['Facebook'][0]['Post1']);
-      console.log(project);
-      project.accounts.forEach((acc)=>{
-        let posts = responseData['Facebook'];
-        console.log("posts: ", posts);
+      project.accounts.forEach((acc) => {
+        let posts = responseData["Facebook"];
         let i = 0;
-        posts.forEach(post=>{
+        (posts as any[]).forEach((post) => {
           i++;
           data.content = post[`Post${i}`];
-          console.log("data: ", post);
           toast.promise(
             createPost({
               ...data,
-              accounts: data?.["accounts"].map((p) => p?.["value"]),
+              accounts: [acc],
             }),
-            {
-              error: (err) => err?.["message"],
-              success: () => {
-                router.refresh();
-                form.reset();
-                return "created successfully.";
-              },
-            },
+            { error: (err) => err?.["message"] },
           );
         });
       });
-      
 
-
+      toast.success("created successfully.");
       setLoading(false);
     } catch (error) {
       console.error("Error sending data to the server:", error);
@@ -140,6 +129,7 @@ export function PostCreateButton({
             >
               <PostForm.description form={form as any} loading={loading} />
               <PostForm.imageDescription form={form as any} loading={loading} />
+              <PostForm.noOfWeeks form={form as any} loading={loading} />
 
               <Card>
                 <CardHeader>

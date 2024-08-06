@@ -40,27 +40,27 @@ type PostFormProps = {
 };
 
 export const PostForm = {
-  title: ({ loading, form }: PostFormProps) => (
-    <FormField
-      control={form.control}
-      name="title"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Title</FormLabel>
-          <FormControl>
-            <Input
-              type="text"
-              className="w-full"
-              placeholder="Health Center"
-              disabled={loading}
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
+  // title: ({ loading, form }: PostFormProps) => (
+  //   <FormField
+  //     control={form.control}
+  //     name="title"
+  //     render={({ field }) => (
+  //       <FormItem>
+  //         <FormLabel>Title</FormLabel>
+  //         <FormControl>
+  //           <Input
+  //             type="text"
+  //             className="w-full"
+  //             placeholder="Health Center"
+  //             disabled={loading}
+  //             {...field}
+  //           />
+  //         </FormControl>
+  //         <FormMessage />
+  //       </FormItem>
+  //     )}
+  //   />
+  // ),
   description: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
@@ -72,6 +72,27 @@ export const PostForm = {
             <Textarea
               className="w-full"
               placeholder="Describe your post"
+              disabled={loading}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
+  noOfWeeks: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="noOfWeeks"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>No. Of Weeks</FormLabel>
+          <FormControl>
+            <Input
+              type="text"
+              className="w-full"
+              placeholder="5"
               disabled={loading}
               {...field}
             />
