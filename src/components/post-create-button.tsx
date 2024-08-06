@@ -65,7 +65,7 @@ export function PostCreateButton({
     console.log(JSON.stringify(result));
 
     // Define the endpoint URL
-    const endpoint = "http://127.0.0.1:5000/chat/socialmediaplan";
+    const endpoint = "takamol-advanced-ai.vercel.app/chat/socialmediaplan";
 
     try {
       // Send data to the server

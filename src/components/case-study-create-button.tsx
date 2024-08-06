@@ -55,7 +55,7 @@ export function CaseStudyCreateButton({
     console.log(JSON.stringify(result));
 
     // Define the endpoint URL
-    const endpoint = 'http://127.0.0.1:5000/chat/casestudy';
+    const endpoint = 'takamol-advanced-ai.vercel.app/chat/casestudy';
 
     try {
       // Send data to the server
