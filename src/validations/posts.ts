@@ -5,7 +5,7 @@ export const postInsertSchema = z.object({
   id: z.string("id"),
   caseStudyId: z.string("caseStudyId"),
   title: z.string("title"),
-  description: z.string("description").optional(),
+  description: z.string("description"),
   imageDescription: z.string("image description"),
   postAt: z.date("postAt").optional(),
   content: z.string("content").optional(),

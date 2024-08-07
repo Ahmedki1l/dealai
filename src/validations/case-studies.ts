@@ -4,7 +4,7 @@ export const caseStudyInsertSchema = z.object({
   id: z.string("id"),
   projectId: z.string("projectId"),
   title: z.string("title"),
-  description: z.string("description").optional(),
+  description: z.string("description"),
   content: z.string("content").optional(),
   targetAudience: z.string("targetAudience").optional(),
   pros: z.string("pros").optional(),

@@ -30,6 +30,12 @@ export function CaseStudyUpdateForm({
     resolver: zodResolver(caseStudyUpdateSchema),
     defaultValues: {
       ...caseStudy,
+      description: caseStudy?.["description"] ?? "",
+      content: caseStudy?.["content"] ?? "",
+      targetAudience: caseStudy?.["targetAudience"] ?? "",
+      pros: caseStudy?.["pros"] ?? "",
+      cons: caseStudy?.["cons"] ?? "",
+      hashtags: caseStudy?.["hashtags"] ?? "",
     },
   });
 

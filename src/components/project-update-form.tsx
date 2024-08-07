@@ -36,11 +36,10 @@ export function ProjectUpdateForm({
     resolver: zodResolver(projectUpdateFormSchema),
     defaultValues: {
       ...project,
-      // address: project?.["address"] ?? "",
-      // state: project?.["state"] ?? "",
-      // city: project?.["city"] ?? "",
-      // country: project?.["country"] ?? "",
-      // zip: project?.["zip"] ?? "",
+      title: project?.["title"] ?? "",
+      description: project?.["description"] ?? "",
+      city: project?.["city"] ?? "",
+      country: project?.["country"] ?? "",
       accounts:
         projectAccounts && Array.isArray(projectAccounts)
           ? projectAccounts?.map((p) => ({
@@ -119,7 +118,7 @@ export function ProjectUpdateForm({
                       type="button"
                       variant="outline"
                       size="icon"
-                      onClick={() => accounts?.append({ value: "FACEBOOK" })}
+                      onClick={() => accounts?.append({ value: "Facebook" })}
                       disabled={accounts?.fields?.["length"] == 4}
                     >
                       <Icons.add />

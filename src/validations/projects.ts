@@ -4,7 +4,7 @@ export const projectInsertSchema = z.object({
   id: z.string("id"),
   userId: z.string("userId"),
   title: z.string("title"),
-  description: z.string("description").optional(),
+  description: z.string("description"),
   distinct: z.string("distinct"),
   city: z.string("city"),
   country: z.string("country"),
