@@ -16,14 +16,6 @@ import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { CaseStudy } from "@prisma/client";
 import { Project } from "@prisma/client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { db } from "@/lib/db";
 
 type PostCreateButtonProps = {
   caseStudy: CaseStudy;
@@ -46,12 +38,10 @@ export function PostCreateButton({
       noOfWeeks: undefined,
       imageDescription: undefined,
       postAt: undefined,
-      title:'X',
-      platform: 'Y',
+      title: "X",
+      platform: "Y",
     },
   });
-
-  
 
   console.log(form.formState.errors);
 
@@ -59,7 +49,7 @@ export function PostCreateButton({
     setLoading(true);
     let weeks = data.noOfWeeks ? parseInt(data.noOfWeeks, 10) : 0;
     const result = {
-      input: `create a social media content plan that consists of ${3*weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
+      input: `create a social media content plan that consists of ${3 * weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
     };
 
     console.log(JSON.stringify(result));
@@ -131,6 +121,8 @@ export function PostCreateButton({
               <PostForm.description form={form as any} loading={loading} />
               <PostForm.imageDescription form={form as any} loading={loading} />
               <PostForm.noOfWeeks form={form as any} loading={loading} />
+              <PostForm.campaignType form={form as any} loading={loading} />
+              <PostForm.contentLength form={form as any} loading={loading} />
 
               {/* <Card>
                 <CardHeader>

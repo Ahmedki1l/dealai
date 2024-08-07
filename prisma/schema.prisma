@@ -44,8 +44,20 @@ enum Account {
   Twitter
 }
 
+enum CAMPAIGN {
+  BRANDING_AWARENESS
+  ENGAGEMENT
+  SALES_CONVERSION
+}
+
+enum CONTENT_LENGTH {
+  SHORT
+  MEDIUM
+  LONG
+}
+
 model Project {
-  id          String @id @map("_id")
+  id          String  @id @map("_id")
   userId      String
   title       String
   description String?
@@ -65,7 +77,7 @@ model Project {
 }
 
 model CaseStudy {
-  id          String @id @map("_id")
+  id          String  @id @map("_id")
   projectId   String
   title       String
   description String?
@@ -90,11 +102,13 @@ model Post {
   description      String?
   imageDescription String?
 
-  noOfWeeks        String?
-  content  String?
-  image    String?
+  noOfWeeks String?
+  content   String?
+  image     String?
 
-  platform    String
+  platform      String
+  contentLength CONTENT_LENGTH?
+  campaignType  CAMPAIGN?
 
   postAt    DateTime?
   createdAt DateTime  @default(now())

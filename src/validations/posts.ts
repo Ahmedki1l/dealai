@@ -7,9 +7,11 @@ export const postInsertSchema = z.object({
   title: z.string("title"),
   description: z.string("description"),
   imageDescription: z.string("image description"),
-  postAt: z.date("postAt").optional(),
+  contentLength: z.string("content length"),
+  campaignType: z.string("campaign type"),
+  postAt: z.date("post at").optional(),
   content: z.string("content").optional(),
-  noOfWeeks: z.string("noOfWeeks").optional(),
+  noOfWeeks: z.string("no of weeks").optional(),
   image: z.string("image").optional(),
   platform: z.string("platform"),
 });

@@ -10,12 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  postCreateFormSchema,
-  postCreateSchema,
-  // postDeleteSchema,
-  // postUpdateSchema,
-} from "@/validations/posts";
+import { postCreateFormSchema } from "@/validations/posts";
 import { Textarea } from "@/components/ui/textarea";
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
@@ -122,55 +117,70 @@ export const PostForm = {
       )}
     />
   ),
-  // accounts: ({
-  //   loading,
-  //   form,
-  //   accounts: { fields, remove },
-  // }: PostFormProps & {
-  //   accounts: UseFieldArrayReturn<any, "accounts", "id">;
-  // }) =>
-  //   fields.map((field, i) => (
-  //     <FormField
-  //       control={form.control}
-  //       key={i}
-  //       name={`accounts.${i}.value`}
-  //       render={({ field }) => (
-  //         <FormItem>
-  //           <FormLabel className="sr-only">Platfrms</FormLabel>
-  //           <FormControl>
-  //             <div className="flex items-center justify-center gap-2">
-  //               <Select
-  //                 onValueChange={field.onChange}
-  //                 defaultValue={field.value}
-  //                 disabled={loading}
-  //               >
-  //                 <FormControl>
-  //                   <SelectTrigger>
-  //                     <SelectValue placeholder="Select your platform" />
-  //                   </SelectTrigger>
-  //                 </FormControl>
-  //                 <SelectContent>
-  //                   <SelectItem value="FACEBOOK">Facebook</SelectItem>
-  //                   <SelectItem value="INSTAGRAM">Instagram</SelectItem>
-  //                   <SelectItem value="LINKEDIN">LinkedIn</SelectItem>
-  //                 </SelectContent>
-  //               </Select>
-
-  //               <Button
-  //                 type="button"
-  //                 variant="outline"
-  //                 size="icon"
-  //                 onClick={() => remove(i)}
-  //               >
-  //                 <Icons.x />
-  //               </Button>
-  //             </div>
-  //           </FormControl>
-  //           <FormMessage />
-  //         </FormItem>
-  //       )}
-  //     />
-  //   )),
+  campaignType: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="campaignType"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Campaign Type</FormLabel>
+          <FormControl>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={loading}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your campaign" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="BRANDING_AWARENESS">
+                  Branding Awareness
+                </SelectItem>
+                <SelectItem value="ENGAGEMENT">Engagement</SelectItem>
+                <SelectItem value="SALES_CONVERSION">
+                  Sales Conversion
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
+  contentLength: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="contentLength"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Content Length</FormLabel>
+          <FormControl>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={loading}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your content length" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="SHORT">Short</SelectItem>
+                <SelectItem value="MEDIUM">Medium</SelectItem>
+                <SelectItem value="LONG">Long</SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
   postAt: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
