@@ -55,8 +55,6 @@ export function ProjectCreateButton({
 
   async function onSubmit(data: z.infer<typeof projectCreateFormSchema>) {
     setLoading(true);
-    
-    // Execute project creation if the above request is successful
     toast.promise(
       createProject({
         ...data,

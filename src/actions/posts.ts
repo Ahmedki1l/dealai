@@ -20,20 +20,73 @@ import {
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
+import { Project } from "@prisma/client";
 
-export async function createPost(data: z.infer<typeof postCreateSchema>) {
+export async function createPost(
+  data: z.infer<typeof postCreateSchema>,
+  project: Project,
+) {
   try {
     const user = await getAuth();
 
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
 
-    const id = generateIdFromEntropySize(10);
-    await db.post.create({
-      data: {
-        id,
-        ...data,
+    let weeks = data.noOfWeeks ? parseInt(data.noOfWeeks, 10) : 0;
+    const result = {
+      input: `create a social media content plan that consists of ${3 * weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
+    };
+    const domain = process.env.NEXT_PUBLIC_AI_API;
+
+    // Define the endpoint URL
+    const endpoint = domain + "/chat/socialmediaplan";
+
+    // Send data to the server
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(result),
+    });
+
+    // Handle response from the server
+    const responseData = await response.json();
+
+    const posts = project.accounts
+      .map((acc) => {
+        const posts = responseData?.[acc];
+
+        return (posts as any[]).map((post, i) => ({
+          ...data,
+          id: generateIdFromEntropySize(10),
+          title: `Post${i + 1}`,
+          content: post?.[`Post${i + 1}`] as string,
+          platform: acc as string,
+        }));
+      })
+      .flat();
+
+    //   project.accounts.forEach((acc) => {
+    //     let posts = responseData[acc.toString()];
+    //     let i = 0;
+    //     (posts as any[]).forEach((post) => {
+    //       i++;
+    //       let name = `Post${i}`;
+    //       data.title = name;
+    //       data.platform = acc.toString();
+    //       data.content = post[name];
+    //       toast.promise(
+    //         createPost({
+    //           ...data,
+    //         }),
+    //         { error: (err) => err?.["message"] },
+    //       );
+    //     });
+    //   });
+
+    await db.post.createMany({
+      data: posts,
     });
 
     revalidatePath("/", "layout");

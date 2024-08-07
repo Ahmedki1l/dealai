@@ -43,60 +43,18 @@ export function PostCreateButton({
     },
   });
 
-  console.log(form.formState.errors);
-
   async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-    let weeks = data.noOfWeeks ? parseInt(data.noOfWeeks, 10) : 0;
-    const result = {
-      input: `create a social media content plan that consists of ${3 * weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
-    };
+    toast.promise(createPost(data, project), {
+      finally: () => setLoading(false),
+      error: (err) => err?.["message"],
+      success: () => {
+        router.refresh();
+        form.reset();
 
-    console.log(JSON.stringify(result));
-
-    const domain = process.env.NEXT_PUBLIC_AI_API;
-
-    // Define the endpoint URL
-    const endpoint = domain + "/chat/socialmediaplan";
-
-    try {
-      // Send data to the server
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result),
-      });
-
-      // Handle response from the server
-      const responseData = await response.json();
-      console.log(responseData);
-
-      project.accounts.forEach((acc) => {
-        let posts = responseData[acc.toString()];
-        let i = 0;
-        (posts as any[]).forEach((post) => {
-          i++;
-          let name = `Post${i}`;
-          data.title = name;
-          data.platform = acc.toString();
-          data.content = post[name];
-          toast.promise(
-            createPost({
-              ...data,
-            }),
-            { error: (err) => err?.["message"] },
-          );
-        });
-      });
-
-      toast.success("created successfully.");
-      setLoading(false);
-    } catch (error) {
-      console.error("Error sending data to the server:", error);
-      setLoading(false); // Ensure loading is false on error
-    }
+        return "created successfully.";
+      },
+    });
   }
 
   return (
