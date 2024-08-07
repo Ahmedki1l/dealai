@@ -54,8 +54,12 @@ export function CaseStudyCreateButton({
     }
     console.log(JSON.stringify(result));
 
+    const domain = process.env.NEXT_PUBLIC_AI_API;
+
+    console.log(process.env.NEXT_PUBLIC_AI_API);
+
     // Define the endpoint URL
-    const endpoint = 'takamol-advanced-ai.vercel.app/chat/casestudy';
+    const endpoint = domain + '/chat/casestudy';
 
     try {
       // Send data to the server
