@@ -7,8 +7,13 @@ const nextConfig = {
     serverComponentsExternalPackages: ["@node-rs/argon2"],
   },
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
-    domains: ['source.boringavatars.com'],
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      {
+        protocol: "https",
+        hostname: "source.boringavatars.com",
+      },
+    ],
   },
 };
 

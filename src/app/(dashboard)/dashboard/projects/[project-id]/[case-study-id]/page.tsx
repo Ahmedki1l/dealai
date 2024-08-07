@@ -134,11 +134,12 @@ export default async function CaseStudy({
         </div>
       </div>
 
-      <div className="my-10">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your posts.
+      <div className="pt-16">
+        <div className="flex items-center justify-between gap-2">
+          <div className="mb-8 space-y-0.5">
+            <h2 className="text-2xl font-bold tracking-tight">Posts</h2>
+            <p className="text-sm text-muted-foreground">
+              Navigate to get what you want.
             </p>
           </div>
 
@@ -148,245 +149,371 @@ export default async function CaseStudy({
             </PostCreateButton>
           </div>
         </div>
-        <section className="space-y-6">
-          <div className="mb-8 space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">Posts</h2>
-            <p className="text-sm text-muted-foreground">
-              Navigate to get what you want.
-            </p>
-          </div>
+        <section className="space-y-8">
+          {facebookPosts?.["length"] ? (
+            <div>
+              <div className="mb-4 space-y-0.5">
+                <p className="flex items-center gap-2 text-sm">
+                  <Icons.facebook /> Facebook Posts
+                </p>
+              </div>
+              <Carousel>
+                <CarouselContent>
+                  {facebookPosts.map((e, i) => (
+                    <CarouselItem
+                      key={i}
+                      className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <Card className="overview-hidden">
+                        <CardHeader className="rounded-none p-0">
+                          <Image
+                            src={
+                              e?.["image"] ??
+                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            }
+                            alt=""
+                            className="aspect-square rounded-none"
+                          />
+                        </CardHeader>
+                        <CardContent className="p-2 text-sm">
+                          <p className="line-clamp-6">{e?.["content"]}</p>
+                        </CardContent>
+                        <CardFooter className="flex flex-col gap-2 p-2">
+                          <div className="flex w-full items-center justify-between">
+                            <div className="flex items-center">
+                              <PostUpdateContentButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.edit />
+                                </Button>
+                              </PostUpdateContentButton>
 
-          <div>
-            <div className="mb-4 space-y-0.5">
-              <p className="flex items-center gap-2 text-sm">
-                <Icons.facebook /> Facebook Posts
-              </p>
+                              <Button variant="ghost" size="icon">
+                                <Icons.image />
+                              </Button>
+                              <PostUpdateScheduleButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.calender />
+                                </Button>
+                              </PostUpdateScheduleButton>
+                            </div>
+
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                {e?.["postAt"] &&
+                                  new Date(e?.["postAt"]).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="w-full text-xs">
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">Campaign Type: </span>
+                              {e?.["campaignType"]
+                                ?.toLocaleLowerCase()
+                                .split("_")
+                                .map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">
+                                Content Length:{" "}
+                              </span>
+                              {e?.["contentLength"]
+                                ?.split("_")
+                                ?.map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
-            <Carousel>
-              <CarouselContent>
-                {facebookPosts.map((e, i) => (
-                  <CarouselItem
-                    key={i}
-                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-                  >
-                    <Card className="overview-hidden">
-                      <CardHeader className="rounded-none p-0">
-                        <Image
-                          src={e?.["image"]!}
-                          alt=""
-                          className="aspect-square rounded-none"
-                        />
-                      </CardHeader>
-                      <CardContent className="p-2 text-sm">
-                        <p className="line-clamp-6">{e?.["content"]}</p>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between gap-2 p-2">
-                        <div className="flex items-center gap-2">
-                          <PostUpdateContentButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.edit />
-                            </Button>
-                          </PostUpdateContentButton>
+          ) : null}
+          {linkedInPosts?.["length"] ? (
+            <div>
+              <div className="mb-4 space-y-0.5">
+                <p className="flex items-center gap-2 text-sm">
+                  <Icons.linkedIn /> LinkedIn Posts
+                </p>
+              </div>
+              <Carousel>
+                <CarouselContent>
+                  {linkedInPosts.map((e, i) => (
+                    <CarouselItem
+                      key={i}
+                      className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <Card className="overview-hidden">
+                        <CardHeader className="rounded-none p-0">
+                          <Image
+                            src={
+                              e?.["image"] ??
+                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            }
+                            alt=""
+                            className="aspect-square rounded-none"
+                          />
+                        </CardHeader>
+                        <CardContent className="p-2 text-sm">
+                          <p className="line-clamp-6">{e?.["content"]}</p>
+                        </CardContent>
+                        <CardFooter className="flex flex-col gap-2 p-2">
+                          <div className="flex w-full items-center justify-between">
+                            <div className="flex items-center">
+                              <PostUpdateContentButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.edit />
+                                </Button>
+                              </PostUpdateContentButton>
 
-                          <Button variant="ghost" size="icon">
-                            <Icons.image />
-                          </Button>
-                          <PostUpdateScheduleButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.calender />
-                            </Button>
-                          </PostUpdateScheduleButton>
-                        </div>
+                              <Button variant="ghost" size="icon">
+                                <Icons.image />
+                              </Button>
+                              <PostUpdateScheduleButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.calender />
+                                </Button>
+                              </PostUpdateScheduleButton>
+                            </div>
 
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(e?.["createdAt"]).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                {e?.["postAt"] &&
+                                  new Date(e?.["postAt"]).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
 
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
+                          <div className="w-full text-xs">
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">Campaign Type: </span>
+                              {e?.["campaignType"]
+                                ?.toLocaleLowerCase()
+                                .split("_")
+                                .map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">
+                                Content Length:{" "}
+                              </span>
+                              {e?.["contentLength"]
+                                ?.split("_")
+                                ?.map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-          <div>
-            <div className="mb-4 space-y-0.5">
-              <p className="flex items-center gap-2 text-sm">
-                <Icons.linkedIn /> LinkedIn Posts
-              </p>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
-            <Carousel>
-              <CarouselContent>
-                {linkedInPosts.map((e, i) => (
-                  <CarouselItem
-                    key={i}
-                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-                  >
-                    <Card className="overview-hidden">
-                      <CardHeader className="rounded-none p-0">
-                        <Image
-                          src={e?.["image"]!}
-                          alt=""
-                          className="aspect-square rounded-none"
-                        />
-                      </CardHeader>
-                      <CardContent className="p-2 text-sm">
-                        <p className="line-clamp-6">{e?.["content"]}</p>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between gap-2 p-2">
-                        <div className="flex items-center gap-2">
-                          <PostUpdateContentButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.edit />
-                            </Button>
-                          </PostUpdateContentButton>
+          ) : null}
+          {instagramPosts?.["length"] ? (
+            <div>
+              <div className="mb-4 space-y-0.5">
+                <p className="flex items-center gap-2 text-sm">
+                  <Icons.instagram /> Instagram Posts
+                </p>
+              </div>
+              <Carousel>
+                <CarouselContent>
+                  {instagramPosts.map((e, i) => (
+                    <CarouselItem
+                      key={i}
+                      className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <Card className="overview-hidden">
+                        <CardHeader className="rounded-none p-0">
+                          <Image
+                            src={
+                              e?.["image"] ??
+                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            }
+                            alt=""
+                            className="aspect-square rounded-none"
+                          />
+                        </CardHeader>
+                        <CardContent className="p-2 text-sm">
+                          <p className="line-clamp-6">{e?.["content"]}</p>
+                        </CardContent>
+                        <CardFooter className="flex flex-col gap-2 p-2">
+                          <div className="flex w-full items-center justify-between">
+                            <div className="flex items-center">
+                              <PostUpdateContentButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.edit />
+                                </Button>
+                              </PostUpdateContentButton>
 
-                          <Button variant="ghost" size="icon">
-                            <Icons.image />
-                          </Button>
-                          <PostUpdateScheduleButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.calender />
-                            </Button>
-                          </PostUpdateScheduleButton>
-                        </div>
+                              <Button variant="ghost" size="icon">
+                                <Icons.image />
+                              </Button>
+                              <PostUpdateScheduleButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.calender />
+                                </Button>
+                              </PostUpdateScheduleButton>
+                            </div>
 
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(e?.["createdAt"]).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                {e?.["postAt"] &&
+                                  new Date(e?.["postAt"]).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
 
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
+                          <div className="w-full text-xs">
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">Campaign Type: </span>
+                              {e?.["campaignType"]
+                                ?.toLocaleLowerCase()
+                                .split("_")
+                                .map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">
+                                Content Length:{" "}
+                              </span>
+                              {e?.["contentLength"]
+                                ?.split("_")
+                                ?.map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-          <div>
-            <div className="mb-4 space-y-0.5">
-              <p className="flex items-center gap-2 text-sm">
-                <Icons.instagram /> Instagram Posts
-              </p>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
-            <Carousel>
-              <CarouselContent>
-                {instagramPosts.map((e, i) => (
-                  <CarouselItem
-                    key={i}
-                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-                  >
-                    <Card className="overview-hidden">
-                      <CardHeader className="rounded-none p-0">
-                        <Image
-                          src={e?.["image"]!}
-                          alt=""
-                          className="aspect-square rounded-none"
-                        />
-                      </CardHeader>
-                      <CardContent className="p-2 text-sm">
-                        <p className="line-clamp-6">{e?.["content"]}</p>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between gap-2 p-2">
-                        <div className="flex items-center gap-2">
-                          <PostUpdateContentButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.edit />
-                            </Button>
-                          </PostUpdateContentButton>
+          ) : null}
+          {twitterPosts?.["length"] ? (
+            <div>
+              <div className="mb-4 space-y-0.5">
+                <p className="flex items-center gap-2 text-sm">
+                  <Icons.twitter /> Twitter Posts
+                </p>
+              </div>
+              <Carousel>
+                <CarouselContent>
+                  {twitterPosts.map((e, i) => (
+                    <CarouselItem
+                      key={i}
+                      className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <Card className="overview-hidden">
+                        <CardHeader className="rounded-none p-0">
+                          <Image
+                            src={
+                              e?.["image"] ??
+                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            }
+                            alt=""
+                            className="aspect-square rounded-none"
+                          />
+                        </CardHeader>
+                        <CardContent className="p-2 text-sm">
+                          <p className="line-clamp-6">{e?.["content"]}</p>
+                        </CardContent>
+                        <CardFooter className="flex flex-col gap-2 p-2">
+                          <div className="flex w-full items-center justify-between">
+                            <div className="flex items-center">
+                              <PostUpdateContentButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.edit />
+                                </Button>
+                              </PostUpdateContentButton>
 
-                          <Button variant="ghost" size="icon">
-                            <Icons.image />
-                          </Button>
-                          <PostUpdateScheduleButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.calender />
-                            </Button>
-                          </PostUpdateScheduleButton>
-                        </div>
+                              <Button variant="ghost" size="icon">
+                                <Icons.image />
+                              </Button>
+                              <PostUpdateScheduleButton post={e as any}>
+                                <Button variant="ghost" size="icon">
+                                  <Icons.calender />
+                                </Button>
+                              </PostUpdateScheduleButton>
+                            </div>
 
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(e?.["createdAt"]).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                {e?.["postAt"] &&
+                                  new Date(e?.["postAt"]).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
 
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
+                          <div className="w-full text-xs">
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">Campaign Type: </span>
+                              {e?.["campaignType"]
+                                ?.toLocaleLowerCase()
+                                .split("_")
+                                .map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                            <p className="text-muted-foreground">
+                              <span className="font-bold">
+                                Content Length:{" "}
+                              </span>
+                              {e?.["contentLength"]
+                                ?.split("_")
+                                ?.map(
+                                  (e) =>
+                                    `${e[0]?.toUpperCase()}${e?.slice(1).toLocaleLowerCase()}`,
+                                )
+                                .join(" ")}
+                            </p>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-          <div>
-            <div className="mb-4 space-y-0.5">
-              <p className="flex items-center gap-2 text-sm">
-                <Icons.twitter /> Twitter Posts
-              </p>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
-            <Carousel>
-              <CarouselContent>
-                {twitterPosts.map((e, i) => (
-                  <CarouselItem
-                    key={i}
-                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-                  >
-                    <Card className="overview-hidden">
-                      <CardHeader className="rounded-none p-0">
-                        <Image
-                          src={e?.["image"]!}
-                          alt=""
-                          className="aspect-square rounded-none"
-                        />
-                      </CardHeader>
-                      <CardContent className="p-2 text-sm">
-                        <p className="line-clamp-6">{e?.["content"]}</p>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between gap-2 p-2">
-                        <div className="flex items-center gap-2">
-                          <PostUpdateContentButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.edit />
-                            </Button>
-                          </PostUpdateContentButton>
-
-                          <Button variant="ghost" size="icon">
-                            <Icons.image />
-                          </Button>
-                          <PostUpdateScheduleButton post={e as any}>
-                            <Button variant="ghost" size="icon">
-                              <Icons.calender />
-                            </Button>
-                          </PostUpdateScheduleButton>
-                        </div>
-
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(e?.["createdAt"]).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
+          ) : null}
         </section>
       </div>
     </div>

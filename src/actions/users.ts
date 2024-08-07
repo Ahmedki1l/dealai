@@ -84,12 +84,13 @@ export async function signInWithPassword(
     if (!existingUser) throw new Error("No such a user.");
     if (!existingUser?.["password"]) throw new Error("Incorrect password.");
 
-    const validPassword = await verify(existingUser?.["password"], password, {
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    });
+    const validPassword = existingUser?.["password"] === password;
+    //  await verify(existingUser?.["password"], password, {
+    //   memoryCost: 19456,
+    //   timeCost: 2,
+    //   outputLen: 32,
+    //   parallelism: 1,
+    // });
 
     if (!validPassword) throw new Error("Incorrect email or password");
 
