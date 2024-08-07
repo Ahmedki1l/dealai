@@ -107,8 +107,8 @@ model Post {
   image     String?
 
   platform      String
-  contentLength CONTENT_LENGTH?
-  campaignType  CAMPAIGN?
+  contentLength CONTENT_LENGTH
+  campaignType  CAMPAIGN
 
   postAt    DateTime?
   createdAt DateTime  @default(now())

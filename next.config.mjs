@@ -8,6 +8,7 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+    domains: ['source.boringavatars.com'],
   },
 };
 

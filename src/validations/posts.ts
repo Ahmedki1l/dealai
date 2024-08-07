@@ -5,8 +5,8 @@ export const postInsertSchema = z.object({
   id: z.string("id"),
   caseStudyId: z.string("caseStudyId"),
   title: z.string("title"),
-  description: z.string("description"),
-  imageDescription: z.string("image description"),
+  description: z.string("description").optional(),
+  imageDescription: z.string("image description").optional(),
   contentLength: z.enum(["SHORT", "MEDIUM", "LONG"]),
   campaignType: z.enum([
     "BRANDING_AWARENESS",
