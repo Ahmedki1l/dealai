@@ -10,6 +10,10 @@ import {
 import {
   postCreateSchema,
   postDeleteSchema,
+  postInsertSchema,
+  postUpdateContentSchema,
+  postUpdateImageSchema,
+  postUpdateScheduleSchema,
   // postsDeleteSchema,
   // postsUpdateSchema,
 } from "@/validations/posts";
@@ -42,31 +46,35 @@ export async function createPost(data: z.infer<typeof postCreateSchema>) {
   }
 }
 
-// export async function updatePost({
-//   id,
-//   ...data
-// }: z.infer<typeof postsUpdateSchema>) {
-//   try {
-//     const user = await getAuth();
-//     if (!user) throw new RequiresLoginError();
+export async function updatePost({
+  id,
+  ...data
+}: z.infer<
+  | typeof postUpdateContentSchema
+  | typeof postUpdateImageSchema
+  | typeof postUpdateScheduleSchema
+> &
+  Pick<z.infer<typeof postInsertSchema>, "id">) {
+  try {
+    const user = await getAuth();
+    if (!user) throw new RequiresLoginError();
 
-//     await db.post.update({
-//       data,
-//       where: {
-//         id,
-//       },
-//     });
+    await db.post.update({
+      data,
+      where: {
+        id,
+      },
+    });
 
-//     revalidatePath("/", "layout");
-//   } catch (error: any) {
-//     console.log(error?.["message"]);
-//     if (error instanceof z.ZodError) return new ZodError(error);
-//     throw Error(
-//       error?.["message"] ??
-//         "your post was not updated. Please try again.",
-//     );
-//   }
-// }
+    revalidatePath("/", "layout");
+  } catch (error: any) {
+    console.log(error?.["message"]);
+    if (error instanceof z.ZodError) return new ZodError(error);
+    throw Error(
+      error?.["message"] ?? "your post was not updated. Please try again.",
+    );
+  }
+}
 
 export async function deletePost({ id }: z.infer<typeof postDeleteSchema>) {
   try {

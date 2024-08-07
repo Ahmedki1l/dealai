@@ -28,7 +28,9 @@ import {
   Facebook,
   Instagram,
   Linkedin,
-  Twitter
+  Twitter,
+  Image,
+  Edit,
 } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
@@ -80,6 +82,12 @@ export const Icons = {
   ),
   calender: ({ className, ...props }: IconProps) => (
     <Calendar className={cn(IconsVariants({}), className)} {...props} />
+  ),
+  image: ({ className, ...props }: IconProps) => (
+    <Image className={cn(IconsVariants({}), className)} {...props} />
+  ),
+  edit: ({ className, ...props }: IconProps) => (
+    <Edit className={cn(IconsVariants({}), className)} {...props} />
   ),
   dotsHorizontal: ({ className, ...props }: IconProps) => (
     <DotsHorizontalIcon

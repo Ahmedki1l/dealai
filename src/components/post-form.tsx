@@ -76,6 +76,26 @@ export const PostForm = {
       )}
     />
   ),
+  content: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="content"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Content</FormLabel>
+          <FormControl>
+            <Textarea
+              className="w-full"
+              placeholder="Describe your post content"
+              disabled={loading}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
   noOfWeeks: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
@@ -188,7 +208,7 @@ export const PostForm = {
       render={({ field }) => (
         <FormItem className="flex flex-col">
           <FormLabel>Schedule</FormLabel>
-          <FormControl>
+          <FormControl className="w-full">
             <DateTimePicker
               // mode="single"
               value={field.value}

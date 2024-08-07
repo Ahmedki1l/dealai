@@ -57,7 +57,7 @@ export function DashboardLayout({
   const [loading, setLoading] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const segment = useSelectedLayoutSegment();
-  console.log(segment);
+
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup

@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import { db } from "@/lib/db";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { BackButton } from "@/components/back-button";
-import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import { columns } from "./columns";
 import { PostCreateButton } from "@/components/post-create-button";
 import {
   Breadcrumb,
@@ -14,13 +12,31 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Image } from "@/components/image";
+import { Icons } from "@/components/icons";
+import { PostUpdateContentButton } from "@/components/post-update-content-button";
+import { PostUpdateScheduleButton } from "@/components/post-update-schedule-button";
+
 type CaseStudyProps = Readonly<{
   params: { "project-id": string; "case-study-id": string };
 }>;
@@ -51,6 +67,19 @@ export default async function CaseStudy({
         </EmptyPlaceholder>
       </div>
     );
+
+  const facebookPosts = caseStudy?.["posts"].filter(
+    (e) => e?.["platform"] === "Facebook",
+  );
+  const linkedInPosts = caseStudy?.["posts"].filter(
+    (e) => e?.["platform"] === "LinkedIn",
+  );
+  const instagramPosts = caseStudy?.["posts"].filter(
+    (e) => e?.["platform"] === "Instagram",
+  );
+  const twitterPosts = caseStudy?.["posts"].filter(
+    (e) => e?.["platform"] === "Twitter",
+  );
 
   return (
     <div className="container flex-1 py-6">
@@ -85,9 +114,7 @@ export default async function CaseStudy({
           <Accordion type="single" collapsible>
             <AccordionItem value="content">
               <AccordionTrigger>Case Study Content</AccordionTrigger>
-              <AccordionContent>
-                {caseStudy?.["content"]}
-              </AccordionContent>
+              <AccordionContent>{caseStudy?.["content"]}</AccordionContent>
             </AccordionItem>
             <AccordionItem value="target-audience">
               <AccordionTrigger>Target Audience</AccordionTrigger>
@@ -97,15 +124,11 @@ export default async function CaseStudy({
             </AccordionItem>
             <AccordionItem value="pros">
               <AccordionTrigger>Pros</AccordionTrigger>
-              <AccordionContent>
-                {caseStudy?.["pros"]} 
-              </AccordionContent>
+              <AccordionContent>{caseStudy?.["pros"]}</AccordionContent>
             </AccordionItem>
             <AccordionItem value="cons">
               <AccordionTrigger>Cons</AccordionTrigger>
-              <AccordionContent>
-                {caseStudy?.["cons"]} 
-              </AccordionContent>
+              <AccordionContent>{caseStudy?.["cons"]}</AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
@@ -125,12 +148,246 @@ export default async function CaseStudy({
             </PostCreateButton>
           </div>
         </div>
-        <DataTable
-          data={caseStudy?.["posts"].map((e) => ({ ...e, projectId }))}
-          columns={columns as any}
-          filterBy="title"
-          filterOptions={[]}
-        />
+        <section className="space-y-6">
+          <div className="mb-8 space-y-0.5">
+            <h2 className="text-2xl font-bold tracking-tight">Posts</h2>
+            <p className="text-sm text-muted-foreground">
+              Navigate to get what you want.
+            </p>
+          </div>
+
+          <div>
+            <div className="mb-4 space-y-0.5">
+              <p className="flex items-center gap-2 text-sm">
+                <Icons.facebook /> Facebook Posts
+              </p>
+            </div>
+            <Carousel>
+              <CarouselContent>
+                {facebookPosts.map((e, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  >
+                    <Card className="overview-hidden">
+                      <CardHeader className="rounded-none p-0">
+                        <Image
+                          src={e?.["image"]!}
+                          alt=""
+                          className="aspect-square rounded-none"
+                        />
+                      </CardHeader>
+                      <CardContent className="p-2 text-sm">
+                        <p className="line-clamp-6">{e?.["content"]}</p>
+                      </CardContent>
+                      <CardFooter className="flex items-center justify-between gap-2 p-2">
+                        <div className="flex items-center gap-2">
+                          <PostUpdateContentButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.edit />
+                            </Button>
+                          </PostUpdateContentButton>
+
+                          <Button variant="ghost" size="icon">
+                            <Icons.image />
+                          </Button>
+                          <PostUpdateScheduleButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.calender />
+                            </Button>
+                          </PostUpdateScheduleButton>
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(e?.["createdAt"]).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          <div>
+            <div className="mb-4 space-y-0.5">
+              <p className="flex items-center gap-2 text-sm">
+                <Icons.linkedIn /> LinkedIn Posts
+              </p>
+            </div>
+            <Carousel>
+              <CarouselContent>
+                {linkedInPosts.map((e, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  >
+                    <Card className="overview-hidden">
+                      <CardHeader className="rounded-none p-0">
+                        <Image
+                          src={e?.["image"]!}
+                          alt=""
+                          className="aspect-square rounded-none"
+                        />
+                      </CardHeader>
+                      <CardContent className="p-2 text-sm">
+                        <p className="line-clamp-6">{e?.["content"]}</p>
+                      </CardContent>
+                      <CardFooter className="flex items-center justify-between gap-2 p-2">
+                        <div className="flex items-center gap-2">
+                          <PostUpdateContentButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.edit />
+                            </Button>
+                          </PostUpdateContentButton>
+
+                          <Button variant="ghost" size="icon">
+                            <Icons.image />
+                          </Button>
+                          <PostUpdateScheduleButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.calender />
+                            </Button>
+                          </PostUpdateScheduleButton>
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(e?.["createdAt"]).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          <div>
+            <div className="mb-4 space-y-0.5">
+              <p className="flex items-center gap-2 text-sm">
+                <Icons.instagram /> Instagram Posts
+              </p>
+            </div>
+            <Carousel>
+              <CarouselContent>
+                {instagramPosts.map((e, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  >
+                    <Card className="overview-hidden">
+                      <CardHeader className="rounded-none p-0">
+                        <Image
+                          src={e?.["image"]!}
+                          alt=""
+                          className="aspect-square rounded-none"
+                        />
+                      </CardHeader>
+                      <CardContent className="p-2 text-sm">
+                        <p className="line-clamp-6">{e?.["content"]}</p>
+                      </CardContent>
+                      <CardFooter className="flex items-center justify-between gap-2 p-2">
+                        <div className="flex items-center gap-2">
+                          <PostUpdateContentButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.edit />
+                            </Button>
+                          </PostUpdateContentButton>
+
+                          <Button variant="ghost" size="icon">
+                            <Icons.image />
+                          </Button>
+                          <PostUpdateScheduleButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.calender />
+                            </Button>
+                          </PostUpdateScheduleButton>
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(e?.["createdAt"]).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          <div>
+            <div className="mb-4 space-y-0.5">
+              <p className="flex items-center gap-2 text-sm">
+                <Icons.twitter /> Twitter Posts
+              </p>
+            </div>
+            <Carousel>
+              <CarouselContent>
+                {twitterPosts.map((e, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  >
+                    <Card className="overview-hidden">
+                      <CardHeader className="rounded-none p-0">
+                        <Image
+                          src={e?.["image"]!}
+                          alt=""
+                          className="aspect-square rounded-none"
+                        />
+                      </CardHeader>
+                      <CardContent className="p-2 text-sm">
+                        <p className="line-clamp-6">{e?.["content"]}</p>
+                      </CardContent>
+                      <CardFooter className="flex items-center justify-between gap-2 p-2">
+                        <div className="flex items-center gap-2">
+                          <PostUpdateContentButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.edit />
+                            </Button>
+                          </PostUpdateContentButton>
+
+                          <Button variant="ghost" size="icon">
+                            <Icons.image />
+                          </Button>
+                          <PostUpdateScheduleButton post={e as any}>
+                            <Button variant="ghost" size="icon">
+                              <Icons.calender />
+                            </Button>
+                          </PostUpdateScheduleButton>
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(e?.["createdAt"]).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+        </section>
       </div>
     </div>
   );
