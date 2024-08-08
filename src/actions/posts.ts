@@ -19,11 +19,9 @@ export async function createPost(data: z.infer<typeof postCreateSchema>, project
     if (!user) throw new RequiresLoginError();
 
     let weeks = data.noOfWeeks ? parseInt(data.noOfWeeks, 10) : 0;
-    let noOfPostsPerWeek =
-      data.campaignType === "BRANDING_AWARENESS" ||
-      data.campaignType === "ENGAGEMENT"
-        ? 5
-        : 3;
+    let noOfPostsPerWeek = 
+      data.campaignType === "BRANDING_AWARENESS" || data.campaignType === "ENGAGEMENT"
+      ? 5 : 3;
 
     const result = {
       input: `create a social media content plan that consists of ${noOfPostsPerWeek * weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project.accounts}. The content should be long and includes hashtags and emojis.`,
@@ -32,14 +30,12 @@ export async function createPost(data: z.infer<typeof postCreateSchema>, project
     const domain = process.env.NEXT_PUBLIC_AI_API;
     const endpoint = domain + "/chat/socialmediaplan";
 
-    // Send initial plan data to the server
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(result),
     });
 
-    // Handle response from the server
     const responseData = await response.json();
 
     const daysToPost = noOfPostsPerWeek === 3 ? [0, 2, 4] : [0, 1, 2, 3, 4];
@@ -47,14 +43,23 @@ export async function createPost(data: z.infer<typeof postCreateSchema>, project
     let imageFetchPromises = [];
     let allPostDetails = [];
 
-    // Prepare and fetch image URLs for each post concurrently
     for (const acc of project.accounts) {
       const accountPosts = responseData?.[acc];
-      for (let i = 0; i < accountPosts.length; i++) {
-        const postContent = accountPosts[i][`Post${i + 1}`];
-        const imagePrompt = { input: postContent };
 
-        // Prepare the fetch promise for the image
+      // Calculate the starting date for each account to ensure unique dates
+      let currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1); // Start from the next day
+
+      for (let i = 0; i < accountPosts.length; i++) {
+        // Adjust currentDate to the next valid posting day
+        while (currentDate.getDay() === 5 || currentDate.getDay() === 6 || !daysToPost.includes(currentDate.getDay())) {
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
+        currentDate.setHours(randomHour, 0, 0);
+
+        const imagePrompt = { input: accountPosts[i][`Post${i + 1}`] };
         const fetchPromise = fetch(imageApiEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -64,34 +69,25 @@ export async function createPost(data: z.infer<typeof postCreateSchema>, project
         imageFetchPromises.push(fetchPromise);
 
         fetchPromise.then(imageData => {
-          // Calculate the date for post scheduling
-          let currentDate = new Date();
-          currentDate.setDate(currentDate.getDate() + 1 + i); // Assume posting starts tomorrow and schedules consecutively
-          while (daysToPost.includes(currentDate.getDay()) === false) {
-            currentDate.setDate(currentDate.getDate() + 1);
-          }
-          const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
-          currentDate.setHours(randomHour, 0, 0);
-
-          // Construct post details
           allPostDetails.push({
             ...data,
             id: generateIdFromEntropySize(10),
             title: `Post${i + 1}`,
-            content: postContent,
+            content: accountPosts[i][`Post${i + 1}`],
             platform: acc,
-            postAt: currentDate,
+            postAt: new Date(currentDate), // Clone the date to avoid reference issues
             image: imageData.url
           });
+
+          // Increment the date for the next post
+          currentDate.setDate(currentDate.getDate() + 1);
         });
       }
     }
 
-    // Wait for all image URLs to be fetched
     await Promise.all(imageFetchPromises);
 
     if (allPostDetails.length > 0) {
-      // Batch create all posts in the database
       await db.post.createMany({
         data: allPostDetails,
       });
@@ -102,13 +98,14 @@ export async function createPost(data: z.infer<typeof postCreateSchema>, project
     }
 
   } catch (error: any) {
-    console.log(error?.["message"]);
-    if (error instanceof z.ZodError) return new ZodError(error);
-    throw new Error(
-      error?.["message"] ?? "your post was not created. Please try again.",
-    );
+    console.error("Error in createPost:", error.message || "An unknown error occurred");
+    if (error instanceof z.ZodError) {
+      return new ZodError(error);
+    }
+    throw new Error(error?.message || "your post was not created. Please try again.");
   }
 }
+
 
 export async function updatePost({
   id,
