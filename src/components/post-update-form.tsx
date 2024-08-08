@@ -172,23 +172,23 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
               <CardHeader>
                 <CardTitle>Post Information</CardTitle>
                 <CardDescription>
-                  Lipsum dolor sit amet, consectetur adipiscing elit
+                  {post.description}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <PostForm.title form={form as any} loading={loading} />
+                <PostForm.title form={form as any} loading={true} />
                 <PostForm.content form={form as any} loading={loading} />
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <PostForm.contentLength
                     form={form as any}
-                    loading={loading}
+                    loading={true}
                   />
-                  <PostForm.campaignType form={form as any} loading={loading} />
+                  <PostForm.campaignType form={form as any} loading={true} />
                 </div>
                 <div className="grid items-center gap-4 md:grid-cols-[1fr,1fr]">
-                  <PostForm.postAt form={form as any} loading={loading} />
-                  <PostForm.noOfWeeks form={form as any} loading={loading} />
+                  <PostForm.postAt form={form as any} loading={true} />
+                  <PostForm.noOfWeeks form={form as any} loading={true} />
                 </div>
               </CardContent>
             </Card>

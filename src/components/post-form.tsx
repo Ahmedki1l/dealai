@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SelectProps } from "@radix-ui/react-select";
 
 type PostFormProps = {
   loading: boolean;
@@ -189,7 +190,7 @@ export const PostForm = {
       )}
     />
   ),
-  contentLength: ({ loading, form }: PostFormProps) => (
+  contentLength: ({ loading, form, ...props }: PostFormProps & SelectProps) => (
     <FormField
       control={form.control}
       name="contentLength"
@@ -201,6 +202,7 @@ export const PostForm = {
               onValueChange={field.onChange}
               defaultValue={field.value}
               disabled={loading}
+              {...props}
             >
               <FormControl>
                 <SelectTrigger>
