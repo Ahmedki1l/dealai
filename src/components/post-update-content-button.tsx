@@ -18,7 +18,7 @@ import { Post } from "@prisma/client";
 
 type PostUpdateContentButtonProps = {
   post: Post;
-} & DialogResponsiveProps;
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 
 export function PostUpdateContentButton({
   post,
@@ -26,6 +26,7 @@ export function PostUpdateContentButton({
 }: PostUpdateContentButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof postUpdateContentSchema>>({
     resolver: zodResolver(postUpdateContentSchema),
@@ -40,6 +41,7 @@ export function PostUpdateContentButton({
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
         return "content updated successfully.";
       },
     });
@@ -64,7 +66,7 @@ export function PostUpdateContentButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <PostForm.content form={form as any} loading={loading} />
             </form>
@@ -73,6 +75,8 @@ export function PostUpdateContentButton({
       }
       title="Update Content"
       description="This step is essential for informing patients about the treatments available at your post."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );

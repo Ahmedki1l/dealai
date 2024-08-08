@@ -24,14 +24,17 @@ import {
   CardTitle,
 } from "./ui/card";
 
-type ProjectCreateButtonProps = { user: User } & DialogResponsiveProps;
-
+type ProjectCreateButtonProps = { user: User } & Omit<
+  DialogResponsiveProps,
+  "open" | "setOpen"
+>;
 export function ProjectCreateButton({
   user,
   ...props
 }: ProjectCreateButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof projectCreateFormSchema>>({
     resolver: zodResolver(projectCreateFormSchema),
@@ -66,7 +69,8 @@ export function ProjectCreateButton({
         success: () => {
           router.refresh();
           form.reset();
-          return "Project created successfully.";
+          setOpen(false);
+          return "created successfully.";
         },
       },
     );
@@ -74,6 +78,8 @@ export function ProjectCreateButton({
 
   return (
     <DialogResponsive
+      open={open}
+      setOpen={setOpen}
       confirmButton={
         <>
           <Form {...form}>
@@ -91,12 +97,12 @@ export function ProjectCreateButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <ProjectForm.title form={form as any} loading={loading} />
               <ProjectForm.description form={form as any} loading={loading} />
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <ProjectForm.distinct form={form as any} loading={loading} />
                 <ProjectForm.city form={form as any} loading={loading} />
                 <ProjectForm.country form={form as any} loading={loading} />

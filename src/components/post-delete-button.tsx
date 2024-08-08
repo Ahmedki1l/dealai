@@ -17,11 +17,12 @@ import { Post } from "@prisma/client";
 
 type PostDeleteButtonProps = {
   post: Pick<Post, "id">;
-} & DialogResponsiveProps;
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 
 export function PostDeleteButton({ post, ...props }: PostDeleteButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof postDeleteSchema>>({
     resolver: zodResolver(postDeleteSchema),
@@ -38,6 +39,7 @@ export function PostDeleteButton({ post, ...props }: PostDeleteButtonProps) {
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
         return "deleted successfully.";
       },
     });
@@ -63,6 +65,8 @@ export function PostDeleteButton({ post, ...props }: PostDeleteButtonProps) {
       }
       title="Delete Post"
       description="This step is essential for informing patients about the treatments available at your post."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );

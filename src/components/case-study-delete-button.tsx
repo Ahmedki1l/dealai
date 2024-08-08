@@ -17,7 +17,7 @@ import { CaseStudy } from "@prisma/client";
 
 type CaseStudyDeleteButtonProps = {
   caseStudy: Pick<CaseStudy, "id">;
-} & DialogResponsiveProps;
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 
 export function CaseStudyDeleteButton({
   caseStudy,
@@ -25,6 +25,7 @@ export function CaseStudyDeleteButton({
 }: CaseStudyDeleteButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof caseStudyDeleteSchema>>({
     resolver: zodResolver(caseStudyDeleteSchema),
@@ -41,6 +42,7 @@ export function CaseStudyDeleteButton({
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
         return "deleted successfully.";
       },
     });
@@ -66,6 +68,8 @@ export function CaseStudyDeleteButton({
       }
       title="Delete Case Study"
       description="This step is essential for informing patients about the treatments available at your caseStudy."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );

@@ -18,8 +18,6 @@ import Link from "next/link";
 type UserAuthLoginFormProps = {};
 
 export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [isFacebookLoading, setIsFacebookLoading] = useState<boolean>(false);
@@ -35,11 +33,6 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
     toast.promise(signInWithPassword(data), {
       finally: () => setLoading(false),
       error: (err) => err?.["message"],
-      // success: () => {
-      //   router.push(searchParams?.get("from") ?? "/dashboard");
-      //   form.reset();
-      //   return "logged in";
-      // },
     });
   }
   return (

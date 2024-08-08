@@ -15,23 +15,20 @@ import {
 } from "@/components/ui/tooltip";
 import { SideNav } from "@/components/side-nav";
 import { SelectItem } from "@/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { User } from "@/types/db";
 import { Avatar } from "@/components/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
-import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { logout } from "@/actions/users";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 
 type DashboardLayoutProps = {
   user: User;
@@ -56,7 +53,6 @@ export function DashboardLayout({
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
-  const segment = useSelectedLayoutSegment();
 
   return (
     <TooltipProvider delayDuration={0}>

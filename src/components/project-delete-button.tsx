@@ -17,14 +17,14 @@ import { Project } from "@prisma/client";
 
 type ProjectDeleteButtonProps = {
   project: Pick<Project, "id">;
-} & DialogResponsiveProps;
-
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 export function ProjectDeleteButton({
   project,
   ...props
 }: ProjectDeleteButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof projectDeleteSchema>>({
     resolver: zodResolver(projectDeleteSchema),
@@ -41,6 +41,7 @@ export function ProjectDeleteButton({
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
         return "deleted successfully.";
       },
     });
@@ -48,6 +49,8 @@ export function ProjectDeleteButton({
 
   return (
     <DialogResponsive
+      open={open}
+      setOpen={setOpen}
       confirmButton={
         <>
           <Form {...form}>

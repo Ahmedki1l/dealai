@@ -36,6 +36,7 @@ type PostUpdateFormProps = {
 export function PostUpdateForm({ post }: PostUpdateFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof postUpdateSchema>>({
     resolver: zodResolver(postUpdateSchema),
@@ -67,6 +68,7 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
         error: (err) => err?.["message"],
         success: () => {
           router.refresh();
+          setOpen(false);
           return "updated successfully.";
         },
       },
@@ -127,6 +129,8 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
           ) : null}{" "}
           <div className="absolute right-4 top-4 z-50 flex items-center text-lg font-medium">
             <DialogResponsive
+              open={open}
+              setOpen={setOpen}
               confirmButton={
                 <>
                   <DialogClose asChild className="hidden md:block">
