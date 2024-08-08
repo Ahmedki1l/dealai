@@ -45,7 +45,7 @@ export function PostCreateButton({
 
   async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-    
+
     // Schedule the post and handle the promise
     toast.promise(createPost(data, project), {
       finally: () => setLoading(false),
