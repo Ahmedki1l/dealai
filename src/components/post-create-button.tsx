@@ -137,6 +137,7 @@ export function PostCreateButton({
           currentDate.setDate(currentDate.getDate() + 1);
         });
       });
+
     } catch (error) {
       console.error("Error sending data to the server:", error);
       setLoading(false); // Ensure loading is false on error
