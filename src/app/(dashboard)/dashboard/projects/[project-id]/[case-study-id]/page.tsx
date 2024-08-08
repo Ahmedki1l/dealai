@@ -112,7 +112,7 @@ export default async function CaseStudy({
           <CardDescription>{caseStudy?.["description"]}</CardDescription>
         </div>
         <div>
-          <Accordion type="single" collapsible>
+          <Accordion type="multiple">
             <AccordionItem value="content">
               <AccordionTrigger>Case Study Content</AccordionTrigger>
               <AccordionContent>{caseStudy?.["content"]}</AccordionContent>

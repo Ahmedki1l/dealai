@@ -45,7 +45,7 @@ export function PostCreateButton({
 
   async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
     setLoading(true);
-    
+
     // Schedule the post and handle the promise
     toast.promise(createPost(data, project), {
       finally: () => setLoading(false),
@@ -81,7 +81,7 @@ export function PostCreateButton({
               className="container space-y-2 md:p-0"
             >
               <PostForm.description form={form as any} loading={loading} />
-              <PostForm.imageDescription form={form as any} loading={loading} />
+              {/* <PostForm.imageDescription form={form as any} loading={loading} /> */}
               <PostForm.noOfWeeks form={form as any} loading={loading} />
               <PostForm.campaignType form={form as any} loading={loading} />
               <PostForm.contentLength form={form as any} loading={loading} />
