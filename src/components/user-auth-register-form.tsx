@@ -17,8 +17,6 @@ import { signInWithGoogle, signUpWithPassword } from "@/actions/users";
 type UserAuthRegisterFormProps = {};
 
 export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
-  // const router = useRouter();
-  // const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [isFacebookLoading, setIsFacebookLoading] = useState<boolean>(false);
@@ -27,7 +25,7 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
     resolver: zodResolver(userAuthRegisterSchema),
     mode: "onSubmit",
     defaultValues: {
-      // name: undefined,
+      name: undefined,
       email: undefined,
       password: undefined,
     },
@@ -38,18 +36,6 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
     toast.promise(signUpWithPassword(data), {
       finally: () => setLoading(false),
       error: (err) => err?.["message"],
-      // success: () => {
-      //   // form.reset();
-      //   // router.push(
-      //   //   `/auth/login?${
-      //   //     searchParams?.get("from")
-      //   //       ? `?from=${searchParams?.get("from")}`
-      //   //       : ""
-      //   //   }`,
-      //   // );
-
-      //   return "your data was saved. login now.";
-      // },
     });
   }
   return (

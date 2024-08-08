@@ -28,7 +28,10 @@ import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { Project } from "@prisma/client";
 import { id } from "date-fns/locale";
 
-type CaseStudyCreateButtonProps = { project: Project } & DialogResponsiveProps;
+type CaseStudyCreateButtonProps = { project: Project } & Omit<
+  DialogResponsiveProps,
+  "open" | "setOpen"
+>;
 
 export function CaseStudyCreateButton({
   project,
@@ -36,6 +39,7 @@ export function CaseStudyCreateButton({
 }: CaseStudyCreateButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof caseStudyCreateSchema>>({
     resolver: zodResolver(caseStudyCreateSchema),
@@ -50,8 +54,8 @@ export function CaseStudyCreateButton({
     setLoading(true);
 
     const result = {
-      input:`create a casestudy about ${project.title} ${project.type} located in: ${project.distinct}, ${project.city}, ${project.country}, which has a land space of: ${project.spaces}, ${project.description}. Create the Hashtags for ${project.accounts}`
-    }
+      input: `create a casestudy about ${project.title} ${project.type} located in: ${project.distinct}, ${project.city}, ${project.country}, which has a land space of: ${project.spaces}, ${project.description}. Create the Hashtags for ${project.accounts}`,
+    };
     console.log(JSON.stringify(result));
 
     const domain = process.env.NEXT_PUBLIC_AI_API;
@@ -59,36 +63,37 @@ export function CaseStudyCreateButton({
     console.log(process.env.NEXT_PUBLIC_AI_API);
 
     // Define the endpoint URL
-    const endpoint = domain + '/chat/casestudy';
+    const endpoint = domain + "/chat/casestudy";
 
     try {
       // Send data to the server
       const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(result)
+        body: JSON.stringify(result),
       });
 
       // Handle response from the server
       const responseData = await response.json();
-      console.log('Response from server:', responseData);
-      data.content = responseData['Case_Study'];
-      data.targetAudience = responseData['Target_Audience'];
-      data.pros = responseData['Pros'];
-      data.cons = responseData['Cons'];
+      console.log("Response from server:", responseData);
+      data.content = responseData["Case_Study"];
+      data.targetAudience = responseData["Target_Audience"];
+      data.pros = responseData["Pros"];
+      data.cons = responseData["Cons"];
       toast.promise(createCaseStudy(data), {
         finally: () => setLoading(false),
         error: (err) => err?.["message"],
         success: () => {
           router.refresh();
           form.reset();
+          setOpen(false);
           return "created successfully.";
         },
       });
     } catch (error) {
-      console.error('Error sending data to the server:', error);
+      console.error("Error sending data to the server:", error);
       setLoading(false); // Ensure loading is false on error
     }
   }
@@ -112,53 +117,18 @@ export function CaseStudyCreateButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <CaseStudyForm.title form={form} loading={loading} />
               <CaseStudyForm.description form={form} loading={loading} />
-
-              {/* <div className="grid gap-4 md:grid-cols-2">
-                <CaseStudyForm.state form={form} loading={loading} />
-                <CaseStudyForm.zip form={form} loading={loading} />
-                <CaseStudyForm.city form={form} loading={loading} />
-                <CaseStudyForm.country form={form} loading={loading} />
-              </div>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Phone Numbers</CardTitle>
-                      <CardDescription>
-                        Add phone number to your caseStudy so patients reach you
-                        fast.
-                      </CardDescription>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => phones?.append({ value: "" })}
-                      disabled={phones?.fields?.["length"] == 4}
-                    >
-                      <Icons.add />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CaseStudyForm.phones
-                    phones={phones}
-                    form={form}
-                    loading={loading}
-                  />
-                </CardContent>
-              </Card> */}
             </form>
           </Form>
         </>
       }
       title="Create Case Study"
       description="This step is essential for informing patients about the treatments available at your caseStudy."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );

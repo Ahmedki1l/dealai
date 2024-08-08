@@ -20,7 +20,7 @@ import { Project } from "@prisma/client";
 type PostCreateButtonProps = {
   caseStudy: CaseStudy;
   project: Project;
-} & DialogResponsiveProps;
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 
 export function PostCreateButton({
   caseStudy,
@@ -29,6 +29,7 @@ export function PostCreateButton({
 }: PostCreateButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof postCreateFormSchema>>({
     resolver: zodResolver(postCreateFormSchema),
@@ -53,6 +54,7 @@ export function PostCreateButton({
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
 
         return "created successfully.";
       },
@@ -78,7 +80,7 @@ export function PostCreateButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <PostForm.description form={form as any} loading={loading} />
               {/* <PostForm.imageDescription form={form as any} loading={loading} /> */}
@@ -122,6 +124,8 @@ export function PostCreateButton({
       }
       title="Create Post"
       description="This step is essential for informing patients about the treatments available at your post."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );

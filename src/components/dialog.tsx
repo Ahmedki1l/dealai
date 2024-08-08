@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Dialog,
@@ -22,7 +22,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DialogTriggerProps } from "@radix-ui/react-dialog";
 
@@ -31,7 +30,9 @@ export type DialogResponsiveProps = {
   content?: React.ReactNode;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
-} & Omit<DialogTriggerProps, "content">;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+} & Omit<DialogTriggerProps, "content" | "open" | "setOpen">;
 
 export function DialogResponsive({
   confirmButton,
@@ -43,10 +44,11 @@ export function DialogResponsive({
       <br /> This action cannot be undone.
     </>
   ),
+  setOpen,
+  open,
   ...props
 }: DialogResponsiveProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const [open, setOpen] = React.useState(false);
 
   if (isDesktop) {
     return (

@@ -23,14 +23,14 @@ import { Project } from "@prisma/client";
 import { updateProject } from "@/actions/projects";
 type ProjectUpdateFormProps = {
   project: Project;
-} & DialogResponsiveProps;
-
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 export function ProjectUpdateForm({
   project: { accounts: projectAccounts, ...project },
   ...props
 }: ProjectUpdateFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof projectUpdateFormSchema>>({
     resolver: zodResolver(projectUpdateFormSchema),
@@ -66,6 +66,7 @@ export function ProjectUpdateForm({
         success: () => {
           router.refresh();
           form.reset();
+          setOpen(false);
           return "updated successfully.";
         },
       },
@@ -74,6 +75,8 @@ export function ProjectUpdateForm({
 
   return (
     <DialogResponsive
+      open={open}
+      setOpen={setOpen}
       confirmButton={
         <>
           <Form {...form}>
@@ -96,7 +99,7 @@ export function ProjectUpdateForm({
               <ProjectForm.title form={form as any} loading={loading} />
               <ProjectForm.description form={form as any} loading={loading} />
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <ProjectForm.distinct form={form as any} loading={loading} />
                 <ProjectForm.city form={form as any} loading={loading} />
                 <ProjectForm.country form={form as any} loading={loading} />

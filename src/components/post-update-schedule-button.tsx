@@ -11,21 +11,21 @@ import { Icons } from "@/components/icons";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { postUpdateScheduleSchema } from "@/validations/posts";
-import { createPost, updatePost } from "@/actions/posts";
+import { updatePost } from "@/actions/posts";
 import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { Post } from "@prisma/client";
 
 type PostUpdateScheduleButtonProps = {
   post: Post;
-} & DialogResponsiveProps;
-
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 export function PostUpdateScheduleButton({
   post,
   ...props
 }: PostUpdateScheduleButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof postUpdateScheduleSchema>>({
     resolver: zodResolver(postUpdateScheduleSchema),
@@ -40,6 +40,7 @@ export function PostUpdateScheduleButton({
       success: () => {
         router.refresh();
         form.reset();
+        setOpen(false);
         return "scheduled successfully.";
       },
     });
@@ -47,6 +48,8 @@ export function PostUpdateScheduleButton({
 
   return (
     <DialogResponsive
+      open={open}
+      setOpen={setOpen}
       confirmButton={
         <>
           <Form {...form}>
@@ -64,7 +67,7 @@ export function PostUpdateScheduleButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <PostForm.postAt form={form as any} loading={loading} />
             </form>

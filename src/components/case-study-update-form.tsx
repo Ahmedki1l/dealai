@@ -17,7 +17,7 @@ import { CaseStudy } from "@prisma/client";
 
 type CaseStudyUpdateFormProps = {
   caseStudy: CaseStudy;
-} & DialogResponsiveProps;
+} & Omit<DialogResponsiveProps, "open" | "setOpen">;
 
 export function CaseStudyUpdateForm({
   caseStudy,
@@ -25,6 +25,7 @@ export function CaseStudyUpdateForm({
 }: CaseStudyUpdateFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof caseStudyUpdateSchema>>({
     resolver: zodResolver(caseStudyUpdateSchema),
@@ -51,6 +52,7 @@ export function CaseStudyUpdateForm({
         success: () => {
           router.refresh();
           form.reset();
+          setOpen(false);
           return "updated successfully.";
         },
       },
@@ -76,7 +78,7 @@ export function CaseStudyUpdateForm({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
+              className="space-y-2 md:p-0"
             >
               <CaseStudyForm.title form={form as any} loading={loading} />
               <CaseStudyForm.description form={form as any} loading={loading} />
@@ -86,6 +88,8 @@ export function CaseStudyUpdateForm({
       }
       title="Update Case Study"
       description="This step is essential for informing patients about the treatments available at your case study."
+      open={open}
+      setOpen={setOpen}
       {...props}
     />
   );
