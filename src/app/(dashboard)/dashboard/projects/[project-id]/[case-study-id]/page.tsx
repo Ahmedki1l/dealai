@@ -36,6 +36,7 @@ import { Image } from "@/components/image";
 import { Icons } from "@/components/icons";
 import { PostUpdateContentButton } from "@/components/post-update-content-button";
 import { PostUpdateScheduleButton } from "@/components/post-update-schedule-button";
+import Link from "next/link";
 
 type CaseStudyProps = Readonly<{
   params: { "project-id": string; "case-study-id": string };
@@ -166,14 +167,18 @@ export default async function CaseStudy({
                     >
                       <Card className="overview-hidden">
                         <CardHeader className="rounded-none p-0">
-                          <Image
-                            src={
-                              e?.["image"] ??
-                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            }
-                            alt=""
-                            className="aspect-square rounded-none"
-                          />
+                          <Link
+                            href={`/dashboard/projects/${projectId}/${caseStudyId}/${e?.["id"]}`}
+                          >
+                            <Image
+                              src={
+                                e?.["image"] ??
+                                "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              }
+                              alt=""
+                              className="aspect-square rounded-none"
+                            />
+                          </Link>
                         </CardHeader>
                         <CardContent className="p-2 text-sm">
                           <p className="line-clamp-6">{e?.["content"]}</p>
@@ -257,14 +262,18 @@ export default async function CaseStudy({
                     >
                       <Card className="overview-hidden">
                         <CardHeader className="rounded-none p-0">
-                          <Image
-                            src={
-                              e?.["image"] ??
-                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            }
-                            alt=""
-                            className="aspect-square rounded-none"
-                          />
+                          <Link
+                            href={`/dashboard/projects/${projectId}/${caseStudyId}/${e?.["id"]}`}
+                          >
+                            <Image
+                              src={
+                                e?.["image"] ??
+                                "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              }
+                              alt=""
+                              className="aspect-square rounded-none"
+                            />
+                          </Link>
                         </CardHeader>
                         <CardContent className="p-2 text-sm">
                           <p className="line-clamp-6">{e?.["content"]}</p>
@@ -348,14 +357,18 @@ export default async function CaseStudy({
                     >
                       <Card className="overview-hidden">
                         <CardHeader className="rounded-none p-0">
-                          <Image
-                            src={
-                              e?.["image"] ??
-                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            }
-                            alt=""
-                            className="aspect-square rounded-none"
-                          />
+                          <Link
+                            href={`/dashboard/projects/${projectId}/${caseStudyId}/${e?.["id"]}`}
+                          >
+                            <Image
+                              src={
+                                e?.["image"] ??
+                                "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              }
+                              alt=""
+                              className="aspect-square rounded-none"
+                            />
+                          </Link>
                         </CardHeader>
                         <CardContent className="p-2 text-sm">
                           <p className="line-clamp-6">{e?.["content"]}</p>
@@ -439,14 +452,18 @@ export default async function CaseStudy({
                     >
                       <Card className="overview-hidden">
                         <CardHeader className="rounded-none p-0">
-                          <Image
-                            src={
-                              e?.["image"] ??
-                              "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            }
-                            alt=""
-                            className="aspect-square rounded-none"
-                          />
+                          <Link
+                            href={`/dashboard/projects/${projectId}/${caseStudyId}/${e?.["id"]}`}
+                          >
+                            <Image
+                              src={
+                                e?.["image"] ??
+                                "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              }
+                              alt=""
+                              className="aspect-square rounded-none"
+                            />
+                          </Link>
                         </CardHeader>
                         <CardContent className="p-2 text-sm">
                           <p className="line-clamp-6">{e?.["content"]}</p>

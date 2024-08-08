@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { PostUpdateForm } from "@/components/post-update-form";
 
 type CaseStudyProps = Readonly<{
   params: { "project-id": string; "case-study-id": string; "post-id": string };
@@ -55,8 +56,8 @@ export default async function CaseStudy({
     );
 
   return (
-    <div className="container flex-1 py-6">
-      <div className="flex flex-col gap-5">
+    <div className="min-h-screen flex-1 overflow-auto">
+      <div className="container flex flex-col gap-5 py-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -86,64 +87,10 @@ export default async function CaseStudy({
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {post?.["title"]}
-            </h2>
-            <p className="text-muted-foreground">Here&apos;s your post.</p>
-          </div>
+
+        <div className="flex max-w-screen-xl flex-1 flex-col gap-6 py-6">
+          <PostUpdateForm post={post} />
         </div>
-
-        <main className="space-y-5">
-          <div className="grid gap-10 md:grid-cols-[auto,1fr]">
-            <div>
-              <img
-                src="/images/login.png"
-                className="max-h-96 object-cover"
-                alt=""
-              />
-            </div>
-
-            <div>
-              {post.content}
-            </div>
-          </div>
-
-          <div>
-            <Card>
-              <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>AI Details</CardTitle>
-                <CardDescription>
-                  {new Date(post?.["createdAt"] ?? "")?.toLocaleDateString()}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div>
-                  <Label className="text-md font-bold">Title</Label>
-                  <CardDescription>{post?.["title"]}</CardDescription>
-                </div>
-
-                <div>
-                  <Label className="text-md font-bold">Description</Label>
-                  <CardDescription>{post?.["description"]}</CardDescription>
-                </div>
-
-                <div>
-                  <Label className="text-md font-bold">Image Description</Label>
-                  <CardDescription>
-                    {post?.["imageDescription"]}
-                  </CardDescription>
-                </div>
-
-                {/* <div>
-                  <Label className="text-md font-bold">Accounts</Label>
-                  <CardDescription>{post?.["accounts"]}</CardDescription>
-                </div> */}
-              </CardContent>
-            </Card>
-          </div>
-        </main>
       </div>
     </div>
   );

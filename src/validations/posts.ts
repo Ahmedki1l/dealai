@@ -22,6 +22,9 @@ export const postInsertSchema = z.object({
 
 export const postCreateSchema = postInsertSchema.omit({ id: true });
 export const postCreateFormSchema = postCreateSchema;
+export const postUpdateSchema = postInsertSchema.omit({
+  caseStudyId: true,
+});
 export const postUpdateContentSchema = postInsertSchema.pick({
   id: true,
   content: true,

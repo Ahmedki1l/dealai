@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import {
   FormControl,
@@ -10,10 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { postCreateFormSchema } from "@/validations/posts";
+import { postCreateFormSchema, postUpdateSchema } from "@/validations/posts";
 import { Textarea } from "@/components/ui/textarea";
-import { Icons } from "./icons";
-import { Button } from "./ui/button";
 import { DateTimePicker } from "./ui/datetime-picker";
 import {
   Select,
@@ -26,8 +24,7 @@ import {
 type PostFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    z.infer<typeof postCreateFormSchema>,
-    // | z.infer<typeof postUpdateSchema>
+    z.infer<typeof postCreateFormSchema> | z.infer<typeof postUpdateSchema>,
     // | z.infer<typeof postDeleteSchema>
     any,
     undefined
@@ -35,27 +32,48 @@ type PostFormProps = {
 };
 
 export const PostForm = {
-  // title: ({ loading, form }: PostFormProps) => (
-  //   <FormField
-  //     control={form.control}
-  //     name="title"
-  //     render={({ field }) => (
-  //       <FormItem>
-  //         <FormLabel>Title</FormLabel>
-  //         <FormControl>
-  //           <Input
-  //             type="text"
-  //             className="w-full"
-  //             placeholder="Health Center"
-  //             disabled={loading}
-  //             {...field}
-  //           />
-  //         </FormControl>
-  //         <FormMessage />
-  //       </FormItem>
-  //     )}
-  //   />
-  // ),
+  title: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="title"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Title</FormLabel>
+          <FormControl>
+            <Input
+              type="text"
+              className="w-full"
+              placeholder="Health Center"
+              disabled={loading}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
+  image: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="image"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Image</FormLabel>
+          <FormControl>
+            <Input
+              type="text"
+              className="w-full"
+              placeholder="unsplash url"
+              disabled={loading}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
   description: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
@@ -65,7 +83,7 @@ export const PostForm = {
           <FormLabel>Description</FormLabel>
           <FormControl>
             <Textarea
-              className="w-full"
+              className="min-h-56 w-full"
               placeholder="Describe your post"
               disabled={loading}
               {...field}
@@ -85,7 +103,7 @@ export const PostForm = {
           <FormLabel>Content</FormLabel>
           <FormControl>
             <Textarea
-              className="w-full"
+              className="min-h-56 w-full"
               placeholder="Describe your post content"
               disabled={loading}
               {...field}
@@ -126,7 +144,7 @@ export const PostForm = {
           <FormLabel>Image Description</FormLabel>
           <FormControl>
             <Textarea
-              className="w-full"
+              className="min-h-56 w-full"
               placeholder="Describe your images"
               disabled={loading}
               {...field}

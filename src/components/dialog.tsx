@@ -82,8 +82,7 @@ export function DialogResponsive({
             {description}
           </DrawerDescription>
         </DrawerHeader>
-
-        {content}
+        <div className="px-4">{content}</div>
 
         <DrawerFooter>
           {confirmButton}
