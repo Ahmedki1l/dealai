@@ -24,8 +24,6 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
 
   const form = useForm<z.infer<typeof userAuthLoginSchema>>({
     resolver: zodResolver(userAuthLoginSchema),
-    mode: "onSubmit",
-    defaultValues: { email: "", password: "" },
   });
 
   function onSubmit(data: z.infer<typeof userAuthLoginSchema>) {

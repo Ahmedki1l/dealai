@@ -16,18 +16,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BackButton } from "./back-button";
-import { PostForm } from "./post-form";
+import { BackButton } from "@/components/back-button";
+import { PostForm } from "@/components/post-form";
 import { Post } from "@prisma/client";
-import { Image } from "./image";
-import { DialogResponsive } from "./dialog";
-import { cn } from "@/lib/utils";
-import { DialogClose } from "./ui/dialog";
-import { DrawerClose } from "./ui/drawer";
 
 type PostUpdateFormProps = {
   post: Post;
@@ -42,46 +36,30 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
     resolver: zodResolver(postUpdateSchema),
     defaultValues: {
       ...post,
-      title: post?.["title"] ?? undefined,
-      description: post?.["description"] ?? undefined,
-      imageDescription: post?.["imageDescription"] ?? undefined,
-      content: post?.["content"] ?? undefined,
-      image:
-        post?.["image"] ??
-        "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      noOfWeeks: post?.["noOfWeeks"] ?? undefined,
-      postAt: post?.["postAt"] ?? undefined,
-      campaignType: post?.["campaignType"] ?? undefined,
-      contentLength: post?.["contentLength"] ?? undefined,
+      imageId: post?.["imageId"] ?? undefined,
     },
   });
 
   function onSubmit(data: z.infer<typeof postUpdateSchema>) {
     setLoading(true);
-    toast.promise(
-      updatePost({
-        ...data,
-        // phones: data?.["phones"].map((p) => p?.["value"]),
-      }),
-      {
-        finally: () => setLoading(false),
-        error: (err) => err?.["message"],
-        success: () => {
-          router.refresh();
-          setOpen(false);
-          return "updated successfully.";
-        },
+    toast.promise(updatePost(data), {
+      finally: () => setLoading(false),
+      error: (err) => err?.["message"],
+      success: () => {
+        router.refresh();
+        setOpen(false);
+        return "updated successfully.";
       },
-    );
+    });
   }
-  function isValidUrl(url: string) {
-    try {
-      new URL(url);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
+  // function isValidUrl(url: string) {
+  //   try {
+  //     new URL(url);
+  //     return true;
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // }
   return (
     <div className="space-y-4">
       <Form {...form}>
@@ -117,7 +95,7 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
         </form>
       </Form>
       <div className="grid gap-4 md:grid-cols-[300px,1fr] lg:grid-cols-3">
-        <div
+        {/* <div
           className={cn(
             "relative h-full min-h-60 flex-col overflow-hidden rounded text-primary-foreground dark:border-r lg:flex",
             // form.watch("image") && `bg-[url(${form.getValues("image")})]`,
@@ -153,7 +131,7 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
               content={
                 <Form {...form}>
                   <form>
-                    <PostForm.image form={form as any} loading={loading} />
+                    <PostForm.image form={form } loading={loading} />
                   </form>
                 </Form>
               }
@@ -165,7 +143,7 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
               </Button>
             </DialogResponsive>
           </div>
-        </div>
+        </div> */}
 
         <Form {...form}>
           <form
@@ -175,19 +153,14 @@ export function PostUpdateForm({ post }: PostUpdateFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Post Information</CardTitle>
-                <CardDescription>
-                  {post.description}
-                </CardDescription>
+                <CardDescription>{post.description}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
                 <PostForm.title form={form as any} loading={true} />
                 <PostForm.content form={form as any} loading={loading} />
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <PostForm.contentLength
-                    form={form as any}
-                    loading={true}
-                  />
+                  <PostForm.contentLength form={form as any} loading={true} />
                   <PostForm.campaignType form={form as any} loading={true} />
                 </div>
                 <div className="grid items-center gap-4 md:grid-cols-[1fr,1fr]">

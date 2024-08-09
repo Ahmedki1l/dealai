@@ -1,25 +1,43 @@
+import { caseStudyTypesArr } from "@/db/enums";
 import { z } from "@/lib/zod";
+import { CASE_STUDY_TYPE } from "@prisma/client";
 
-export const caseStudyInsertSchema = z.object({
+export const caseStudySchema = z.object({
   id: z.string("id"),
   projectId: z.string("projectId"),
   title: z.string("title"),
   description: z.string("description").optional(),
-  content: z.string("content").optional(),
-  targetAudience: z.string("targetAudience").optional(),
-  pros: z.string("pros").optional(),
-  cons: z.string("pros").optional(),
-  hashtags: z.string("hashtags").optional(),
-  // address: z.string("address"),
-  // state: z.string("state"),
-  // city: z.string("city"),
-  // country: z.string("country"),
-  // zip: z.string("zip"),
-  // phones: z.array(z.string("phone")),
+  refImages: z.array(z.string("reference image")),
+
+  content: z.string("content"),
+  targetAudience: z.string("targetAudience"),
+  pros: z.string("pros"),
+  cons: z.string("pros"),
+  hashtags: z.string("hashtags"),
+
+  // Unit Features
+  type: z.enum(caseStudyTypesArr as [CASE_STUDY_TYPE]),
+  units: z.string("units"),
+  space: z.string("space"),
+  finishing: z.string("finishing"),
+  floors: z.string("floors"),
+  rooms: z.string("rooms"),
+  bathrooms: z.string("bathrooms"),
+  recipients: z.string("recipients"),
+  garden: z.string("garden"),
+  pool: z.string("hashtags"),
+  view: z.string("view"),
 });
 
-export const caseStudyCreateSchema = caseStudyInsertSchema.omit({ id: true });
-export const caseStudyUpdateSchema = caseStudyInsertSchema.omit({
+export const caseStudyCreateSchema = caseStudySchema.omit({
+  id: true,
+  // content: true,
+  // targetAudience: true,
+  // pros: true,
+  // cons: true,
+  // hashtags: true,
+});
+export const caseStudyUpdateSchema = caseStudySchema.omit({
   projectId: true,
 });
-export const caseStudyDeleteSchema = caseStudyInsertSchema.pick({ id: true });
+export const caseStudyDeleteSchema = caseStudySchema.pick({ id: true });

@@ -15,11 +15,12 @@ import {
   userAuthLoginSchema,
   userAuthRegisterSchema,
 } from "@/validations/users";
+
 type UserFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    | z.infer<typeof userAuthLoginSchema>
-    | z.infer<typeof userAuthRegisterSchema>,
+    | z.infer<typeof userAuthRegisterSchema>
+    | z.infer<typeof userAuthLoginSchema>,
     any,
     undefined
   >;
@@ -29,7 +30,7 @@ export const UserForm = {
   name: function Component({ loading, form }: UserFormProps) {
     return (
       <FormField
-        control={form.control}
+        control={form?.["control"]}
         name="name"
         render={({ field }) => (
           <FormItem>
@@ -49,11 +50,10 @@ export const UserForm = {
       />
     );
   },
-
   email: function Component({ loading, form }: UserFormProps) {
     return (
       <FormField
-        control={form.control}
+        control={form?.["control"]}
         name="email"
         render={({ field }) => (
           <FormItem>
@@ -78,7 +78,7 @@ export const UserForm = {
   password: function Component({ loading, form }: UserFormProps) {
     return (
       <FormField
-        control={form.control}
+        control={form?.["control"]}
         name="password"
         render={({ field }) => (
           <FormItem>

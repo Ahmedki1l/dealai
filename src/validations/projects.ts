@@ -1,40 +1,44 @@
 import { z } from "@/lib/zod";
+import { PLATFORM, Project, PROJECT_TYPE } from "@prisma/client";
+import { platformsArr, projectTypesArr } from "@/db/enums";
 
-export const projectInsertSchema = z.object({
+export const projectSchema = z.object({
   id: z.string("id"),
   userId: z.string("userId"),
   title: z.string("title"),
-  description: z.string("description"),
+  description: z.string("description").optional(),
   distinct: z.string("distinct"),
   city: z.string("city"),
   country: z.string("country"),
-  type: z.string("type"),
   spaces: z.string("spaces"),
-  accounts: z.array(z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"])),
+
+  type: z.enum(projectTypesArr as [PROJECT_TYPE]),
+  platforms: z.array(z.enum(platformsArr as [PLATFORM])),
 });
 
-export const projectCreateSchema = projectInsertSchema.omit({ id: true });
+export const projectCreateSchema = projectSchema.omit({ id: true });
 export const projectCreateFormSchema = projectCreateSchema
-  .omit({ accounts: true })
+  .omit({ platforms: true })
   .and(
     z.object({
-      accounts: z.array(
+      platforms: z.array(
         z.object({
-          value: z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"]),
+          value: z.enum(platformsArr as [PLATFORM]),
         }),
       ),
     }),
   );
-export const projectUpdateSchema = projectInsertSchema.omit({ userId: true });
+
+export const projectUpdateSchema = projectSchema.omit({ userId: true });
 export const projectUpdateFormSchema = projectUpdateSchema
-  .omit({ accounts: true })
+  .omit({ platforms: true })
   .and(
     z.object({
-      accounts: z.array(
+      platforms: z.array(
         z.object({
-          value: z.enum(["Facebook", "Instagram", "LinkedIn", "Twitter"]),
+          value: z.enum(platformsArr as [PLATFORM]),
         }),
       ),
     }),
   );
-export const projectDeleteSchema = projectInsertSchema.pick({ id: true });
+export const projectDeleteSchema = projectSchema.pick({ id: true });

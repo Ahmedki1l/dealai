@@ -18,6 +18,7 @@ import { Project } from "@prisma/client";
 type ProjectDeleteButtonProps = {
   project: Pick<Project, "id">;
 } & Omit<DialogResponsiveProps, "open" | "setOpen">;
+
 export function ProjectDeleteButton({
   project,
   ...props

@@ -5,7 +5,7 @@ import { CardTitle } from "@/components/ui/card";
 import { getAuth } from "@/lib/auth";
 import type { Metadata } from "next";
 import { columns } from "./projects/columns";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 
 type DashboardProps = Readonly<{}>;
 

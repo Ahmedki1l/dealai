@@ -5,35 +5,23 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table-row-actions";
 import {
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Avatar } from "@/components/avatar";
-import { Badge } from "@/components/ui/badge";
-// import { AppointmentUpdateButton } from "@/components/appointment-update-button";
-// import { AppointmentScheduleButton } from "@/components/appointment-schedule-button";
-// import { AppointmentRescheduleButton } from "@/components/appointment-rescheduled-button";
-// import { AppointmentCompleteButton } from "@/components/appointment-complete-button";
-// import { AppointmentOutOfDateButton } from "@/components/appointment-out-of-date-button";
-// import { AppointmentCancelButton } from "@/components/appointment-cancel-button";
-// import { AppointmentDeleteButton } from "@/components/appointment-delete-button";
 import { Icons } from "@/components/icons";
 import { CaseStudy, Post, Project } from "@prisma/client";
 import { ProjectUpdateForm } from "@/components/project-update-form";
 import Link from "next/link";
 import { ProjectDeleteButton } from "@/components/project-delete-button";
-import { CardDescription, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
+import { platforms } from "@/db/enums";
 
 export const columns: ColumnDef<
   Project & { caseStudy: (CaseStudy & { posts: Post[] })[] }
 >[] = [
   {
-    accessorKey: "name",
+    accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Project" />
     ),
@@ -106,25 +94,20 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: "accounts",
+    accessorKey: "platforms",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Platforms" />
     ),
     cell: ({ row: { original: r } }) => (
       <div className="flex items-center gap-2">
-        {r?.["accounts"]?.map((e, i) =>
-          e === "Facebook" ? (
-            <Icons.facebook key={i} />
-          ) : e === "Instagram" ? (
-            <Icons.instagram key={i} />
-          ) : e === "LinkedIn" ? (
-            <Icons.linkedIn key={i} />
-          ) : e === "Twitter" ? (
-            <Icons.twitter key={i} />
-          ): (
-            "---"
-          ),
-        )}
+        {r?.["platforms"]?.map((e, i) => {
+          const p = platforms.find((p) => p?.["value"] === e);
+          if (!p) return "---";
+
+          const Icon = Icons?.[p?.["icon"]] ?? null;
+
+          return <Icon key={i} />;
+        })}
       </div>
     ),
     enableSorting: false,

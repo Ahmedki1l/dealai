@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { caseStudyUpdateSchema } from "@/validations/case-studies";
 import { updateCaseStudy } from "@/actions/case-studies";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
-import { CaseStudyForm } from "./case-study-form";
+import { CaseStudyForm } from "@/components/case-study-form";
 import { CaseStudy } from "@prisma/client";
 
 type CaseStudyUpdateFormProps = {
@@ -31,32 +31,22 @@ export function CaseStudyUpdateForm({
     resolver: zodResolver(caseStudyUpdateSchema),
     defaultValues: {
       ...caseStudy,
-      description: caseStudy?.["description"] ?? "",
-      content: caseStudy?.["content"] ?? "",
-      targetAudience: caseStudy?.["targetAudience"] ?? "",
-      pros: caseStudy?.["pros"] ?? "",
-      cons: caseStudy?.["cons"] ?? "",
-      hashtags: caseStudy?.["hashtags"] ?? "",
+      description: caseStudy?.["description"] ?? undefined,
     },
   });
 
   function onSubmit(data: z.infer<typeof caseStudyUpdateSchema>) {
     setLoading(true);
-    toast.promise(
-      updateCaseStudy({
-        ...data,
-      }),
-      {
-        finally: () => setLoading(false),
-        error: (err) => err?.["message"],
-        success: () => {
-          router.refresh();
-          form.reset();
-          setOpen(false);
-          return "updated successfully.";
-        },
+    toast.promise(updateCaseStudy(data), {
+      finally: () => setLoading(false),
+      error: (err) => err?.["message"],
+      success: () => {
+        router.refresh();
+        form.reset();
+        setOpen(false);
+        return "updated successfully.";
       },
-    );
+    });
   }
 
   return (
@@ -76,10 +66,7 @@ export function CaseStudyUpdateForm({
       content={
         <>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 md:p-0"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <CaseStudyForm.title form={form as any} loading={loading} />
               <CaseStudyForm.description form={form as any} loading={loading} />
             </form>

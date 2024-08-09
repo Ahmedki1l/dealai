@@ -6,17 +6,12 @@ import {
   ChevronRight,
   User,
   AlertTriangle,
-  Store,
   PackageOpen,
   Settings,
   Plus,
   Home,
-  ShoppingCart,
-  ShoppingBag,
-  Package,
   Users,
   LineChart,
-  PackagePlus,
   Check,
   LogOut,
   X,
@@ -32,10 +27,8 @@ import {
   Image,
   Edit,
 } from "lucide-react";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
-import { DetailedHTMLProps, ImgHTMLAttributes } from "react";
 
 export const IconsVariants = cva("w-4 h-4 shrink-0");
 export type IconProps = {} & LucideProps & VariantProps<typeof IconsVariants>;
@@ -89,32 +82,14 @@ export const Icons = {
   edit: ({ className, ...props }: IconProps) => (
     <Edit className={cn(IconsVariants({}), className)} {...props} />
   ),
-  dotsHorizontal: ({ className, ...props }: IconProps) => (
-    <DotsHorizontalIcon
-      className={cn(IconsVariants({}), className)}
-      // {...props}
-    />
-  ),
-  cart: ({ className, ...props }: IconProps) => (
-    <ShoppingCart className={cn(IconsVariants({}), className)} {...props} />
-  ),
   x: ({ className, ...props }: IconProps) => (
     <X className={cn(IconsVariants({}), className)} {...props} />
-  ),
-  bag: ({ className, ...props }: IconProps) => (
-    <ShoppingBag className={cn(IconsVariants({}), className)} {...props} />
   ),
   check: ({ className, ...props }: IconProps) => (
     <Check className={cn(IconsVariants({}), className)} {...props} />
   ),
   logout: ({ className, ...props }: IconProps) => (
     <LogOut className={cn(IconsVariants({}), className)} {...props} />
-  ),
-  package: ({ className, ...props }: IconProps) => (
-    <Package className={cn(IconsVariants({}), className)} {...props} />
-  ),
-  packagePlus: ({ className, ...props }: IconProps) => (
-    <PackagePlus className={cn(IconsVariants({}), className)} {...props} />
   ),
   analytics: ({ className, ...props }: IconProps) => (
     <LineChart className={cn(IconsVariants({}), className)} {...props} />
@@ -146,9 +121,7 @@ export const Icons = {
   chevronRight: ({ className, ...props }: IconProps) => (
     <ChevronRight className={cn(IconsVariants({}), className)} {...props} />
   ),
-  store: ({ className, ...props }: IconProps) => (
-    <Store className={cn(IconsVariants({}), className)} {...props} />
-  ),
+  // SocialMedia Icons, keys must be lowercase -- used as lowercase another place in code
   facebook: ({ className, ...props }: IconProps) => (
     <Facebook
       className={cn(
@@ -165,7 +138,7 @@ export const Icons = {
       {...props}
     />
   ),
-  linkedIn: ({ className, ...props }: IconProps) => (
+  linkedin: ({ className, ...props }: IconProps) => (
     <Linkedin
       className={cn(IconsVariants({}), "stroke-blue-600", className)}
       {...props}

@@ -1,12 +1,8 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
-import {
-  RequiresAccessError,
-  RequiresLoginError,
-  ZodError,
-} from "@/lib/exceptions";
+import { RequiresLoginError, ZodError } from "@/lib/exceptions";
 import {
   caseStudyCreateSchema,
   caseStudyDeleteSchema,
@@ -15,21 +11,42 @@ import {
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
+import { Project } from "@prisma/client";
 
 export async function createCaseStudy(
-  newData: z.infer<typeof caseStudyCreateSchema>,
+  data: z.infer<typeof caseStudyCreateSchema>,
+  project: Project,
 ) {
   try {
-    const user = await getAuth();
+    const { user } = await getAuth();
 
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
+
+    const result = {
+      input: `create a casestudy about ${project.title} ${project.type} located in: ${project.distinct}, ${project.city}, ${project.country}, which has a land space of: ${project.spaces}, ${project.description}. Create the Hashtags for ${project?.["platforms"]}`,
+    };
+    const endpoint = process.env.NEXT_PUBLIC_AI_API + "/chat/casestudy";
+
+    // Send data to the server
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(result),
+    }).then((r) => r?.json());
+
+    data.content = response["Case_Study"];
+    data.targetAudience = response["Target_Audience"];
+    data.pros = response["Pros"];
+    data.cons = response["Cons"];
 
     const id = generateIdFromEntropySize(10);
     await db.caseStudy.create({
       data: {
         id,
-        ...newData,
+        ...data,
       },
     });
 
@@ -49,7 +66,8 @@ export async function updateCaseStudy({
   ...data
 }: z.infer<typeof caseStudyUpdateSchema>) {
   try {
-    const user = await getAuth();
+    const { user } = await getAuth();
+
     if (!user) throw new RequiresLoginError();
 
     await db.caseStudy.update({
@@ -74,7 +92,8 @@ export async function deleteCaseStudy({
   id,
 }: z.infer<typeof caseStudyDeleteSchema>) {
   try {
-    const user = await getAuth();
+    const { user } = await getAuth();
+
     if (!user) throw new RequiresLoginError();
 
     await db.caseStudy.delete({ where: { id } });

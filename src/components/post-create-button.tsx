@@ -10,7 +10,7 @@ import { Form } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { postCreateFormSchema, postCreateSchema } from "@/validations/posts";
+import { postCreateSchema } from "@/validations/posts";
 import { createPost } from "@/actions/posts";
 import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
@@ -31,20 +31,18 @@ export function PostCreateButton({
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof postCreateFormSchema>>({
-    resolver: zodResolver(postCreateFormSchema),
+  const form = useForm<z.infer<typeof postCreateSchema>>({
+    resolver: zodResolver(postCreateSchema),
     defaultValues: {
       caseStudyId: caseStudy?.["id"],
-      description: undefined,
-      noOfWeeks: undefined,
-      imageDescription: undefined,
-      postAt: undefined,
-      title: "X",
-      platform: "Y",
+      title: "x",
+      content: "x",
+      platform: "FACEBOOK",
+      postAt: new Date(),
     },
   });
 
-  async function onSubmit(data: z.infer<typeof postCreateFormSchema>) {
+  async function onSubmit(data: z.infer<typeof postCreateSchema>) {
     setLoading(true);
 
     // Schedule the post and handle the promise
@@ -52,9 +50,9 @@ export function PostCreateButton({
       finally: () => setLoading(false),
       error: (err) => err?.["message"],
       success: () => {
-        router.refresh();
-        form.reset();
-        setOpen(false);
+        // router.refresh();
+        // form.reset();
+        // setOpen(false);
 
         return "created successfully.";
       },
@@ -78,46 +76,11 @@ export function PostCreateButton({
       content={
         <>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 md:p-0"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <PostForm.description form={form as any} loading={loading} />
-              {/* <PostForm.imageDescription form={form as any} loading={loading} /> */}
               <PostForm.noOfWeeks form={form as any} loading={loading} />
               <PostForm.campaignType form={form as any} loading={loading} />
               <PostForm.contentLength form={form as any} loading={loading} />
-
-              {/* <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Platforms</CardTitle>
-                      <CardDescription>
-                        Add account number to your project so patients reach you
-                        fast.
-                      </CardDescription>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => accounts?.append({ value: "FACEBOOK" })}
-                      disabled={accounts?.fields?.["length"] == 4}
-                    >
-                      <Icons.add />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <PostForm.accounts
-                    accounts={accounts}
-                    form={form as any}
-                    loading={loading}
-                  />
-                </CardContent>
-              </Card> */}
             </form>
           </Form>
         </>

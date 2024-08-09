@@ -10,9 +10,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { postCreateFormSchema, postUpdateSchema } from "@/validations/posts";
+import { postCreateSchema, postUpdateSchema } from "@/validations/posts";
 import { Textarea } from "@/components/ui/textarea";
-import { DateTimePicker } from "./ui/datetime-picker";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 import {
   Select,
   SelectContent,
@@ -20,13 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectProps } from "@radix-ui/react-select";
+import { platforms, postCampaigns, postContentLengths } from "@/db/enums";
 
 type PostFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    z.infer<typeof postCreateFormSchema> | z.infer<typeof postUpdateSchema>,
-    // | z.infer<typeof postDeleteSchema>
+    z.infer<typeof postCreateSchema> | z.infer<typeof postUpdateSchema>,
     any,
     undefined
   >;
@@ -54,27 +53,32 @@ export const PostForm = {
       )}
     />
   ),
-  image: ({ loading, form }: PostFormProps) => (
-    <FormField
-      control={form.control}
-      name="image"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Image</FormLabel>
-          <FormControl>
-            <Input
-              type="text"
-              className="w-full"
-              placeholder="unsplash url"
-              disabled={loading}
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
+  // image: ({
+  //   loading,
+  //   form,
+  // }: PostFormProps<
+  //   z.infer<typeof postCreateSchema> | z.infer<typeof postUpdateSchema>
+  // >) => (
+  //   <FormField
+  //     control={form.control}
+  //     name="image"
+  //     render={({ field }) => (
+  //       <FormItem>
+  //         <FormLabel>Image</FormLabel>
+  //         <FormControl>
+  //           <Input
+  //             type="text"
+  //             className="w-full"
+  //             placeholder="unsplash url"
+  //             disabled={loading}
+  //             {...field}
+  //           />
+  //         </FormControl>
+  //         <FormMessage />
+  //       </FormItem>
+  //     )}
+  //   />
+  // ),
   description: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
@@ -136,26 +140,6 @@ export const PostForm = {
       )}
     />
   ),
-  imageDescription: ({ loading, form }: PostFormProps) => (
-    <FormField
-      control={form.control}
-      name="imageDescription"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Image Description</FormLabel>
-          <FormControl>
-            <Textarea
-              className="min-h-56 w-full"
-              placeholder="Describe your images"
-              disabled={loading}
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
   campaignType: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
@@ -175,13 +159,11 @@ export const PostForm = {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="BRANDING_AWARENESS">
-                  Branding Awareness
-                </SelectItem>
-                <SelectItem value="ENGAGEMENT">Engagement</SelectItem>
-                <SelectItem value="SALES_CONVERSION">
-                  Sales Conversion
-                </SelectItem>
+                {postCampaigns?.map((e, i) => (
+                  <SelectItem key={i} value={e?.["value"]}>
+                    {e?.["label"]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </FormControl>
@@ -190,7 +172,7 @@ export const PostForm = {
       )}
     />
   ),
-  contentLength: ({ loading, form, ...props }: PostFormProps & SelectProps) => (
+  contentLength: ({ loading, form }: PostFormProps) => (
     <FormField
       control={form.control}
       name="contentLength"
@@ -202,7 +184,6 @@ export const PostForm = {
               onValueChange={field.onChange}
               defaultValue={field.value}
               disabled={loading}
-              {...props}
             >
               <FormControl>
                 <SelectTrigger>
@@ -210,9 +191,43 @@ export const PostForm = {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="SHORT">Short</SelectItem>
-                <SelectItem value="MEDIUM">Medium</SelectItem>
-                <SelectItem value="LONG">Long</SelectItem>
+                {postContentLengths?.map((e, i) => (
+                  <SelectItem key={i} value={e?.["value"]}>
+                    {e?.["label"]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
+  platform: ({ loading, form }: PostFormProps) => (
+    <FormField
+      control={form.control}
+      name="platform"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Platform</FormLabel>
+          <FormControl>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={loading}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your content length" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {platforms?.map((e, i) => (
+                  <SelectItem key={i} value={e?.["value"]}>
+                    {e?.["label"]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </FormControl>
@@ -234,6 +249,7 @@ export const PostForm = {
               value={field.value}
               onChange={field.onChange}
               granularity="minute"
+              disabled={loading}
               // disabled={
               //   (date) =>
               //     loading ||
@@ -248,38 +264,4 @@ export const PostForm = {
       )}
     />
   ),
-  // accounts: ({
-  //   loading,
-  //   form,
-  //   accounts: { fields, remove },
-  // }: PostFormProps & {
-  //   accounts: UseFieldArrayReturn<any, "accounts", "id">;
-  // }) =>
-  //   fields.map((field, i) => (
-  //     <FormField
-  //       control={form.control}
-  //       key={i}
-  //       name={`accounts.${i}.value`}
-  //       render={({ field }) => (
-  //         <FormItem>
-  //           <FormLabel className="sr-only">Platfrms</FormLabel>
-  //           <FormControl>
-  //             <div className="flex items-center justify-center gap-2">
-  //               <Input type="text" disabled={loading} {...field} />
-
-  //               <Button
-  //                 type="button"
-  //                 variant="outline"
-  //                 size="icon"
-  //                 onClick={() => remove(i)}
-  //               >
-  //                 <Icons.x />
-  //               </Button>
-  //             </div>
-  //           </FormControl>
-  //           <FormMessage />
-  //         </FormItem>
-  //       )}
-  //     />
-  //   )),
 };

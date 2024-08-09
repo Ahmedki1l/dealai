@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
 import { userAuthRegisterSchema } from "@/validations/users";
-import { useRouter, useSearchParams } from "next/navigation";
 import { UserForm } from "@/components/user-form";
 import { signInWithGoogle, signUpWithPassword } from "@/actions/users";
 
@@ -23,12 +22,6 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
 
   const form = useForm<z.infer<typeof userAuthRegisterSchema>>({
     resolver: zodResolver(userAuthRegisterSchema),
-    mode: "onSubmit",
-    defaultValues: {
-      name: undefined,
-      email: undefined,
-      password: undefined,
-    },
   });
 
   function onSubmit(data: z.infer<typeof userAuthRegisterSchema>) {
@@ -44,16 +37,16 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <UserForm.name
-              form={form as any}
+              form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
 
             <UserForm.email
-              form={form as any}
+              form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
             <UserForm.password
-              form={form as any}
+              form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
 

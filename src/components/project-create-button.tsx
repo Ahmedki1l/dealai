@@ -4,7 +4,6 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import { z as Z } from "@/lib/zod";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -16,13 +15,6 @@ import { createProject } from "@/actions/projects";
 import { User } from "@/types/db";
 import { ProjectForm } from "@/components/project-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
 
 type ProjectCreateButtonProps = { user: User } & Omit<
   DialogResponsiveProps,
@@ -38,22 +30,7 @@ export function ProjectCreateButton({
 
   const form = useForm<z.infer<typeof projectCreateFormSchema>>({
     resolver: zodResolver(projectCreateFormSchema),
-    defaultValues: {
-      userId: user?.["id"],
-      title: undefined,
-      description: undefined,
-      // address: undefined,
-      // state: undefined,
-      // city: undefined,
-      // country: undefined,
-      // zip: undefined,
-      accounts: [],
-    },
-  });
-
-  const accounts = useFieldArray({
-    name: "accounts",
-    control: form.control,
+    defaultValues: { userId: user?.["id"] },
   });
 
   async function onSubmit(data: z.infer<typeof projectCreateFormSchema>) {
@@ -61,7 +38,7 @@ export function ProjectCreateButton({
     toast.promise(
       createProject({
         ...data,
-        accounts: data.accounts.map((account) => account.value),
+        platforms: data.platforms.map((e) => e?.["value"]),
       }),
       {
         finally: () => setLoading(false),
@@ -81,16 +58,14 @@ export function ProjectCreateButton({
       open={open}
       setOpen={setOpen}
       confirmButton={
-        <>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <Button disabled={loading} className="w-full md:w-fit">
-                {loading && <Icons.spinner />}
-                submit
-              </Button>
-            </form>
-          </Form>
-        </>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Button disabled={loading} className="w-full md:w-fit">
+              {loading && <Icons.spinner />}
+              submit
+            </Button>
+          </form>
+        </Form>
       }
       content={
         <>
@@ -102,43 +77,18 @@ export function ProjectCreateButton({
               <ProjectForm.title form={form as any} loading={loading} />
               <ProjectForm.description form={form as any} loading={loading} />
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <ProjectForm.distinct form={form as any} loading={loading} />
                 <ProjectForm.city form={form as any} loading={loading} />
                 <ProjectForm.country form={form as any} loading={loading} />
-                <ProjectForm.type form={form as any} loading={loading} />
-                <ProjectForm.spaces form={form as any} loading={loading} />
               </div>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Platforms</CardTitle>
-                      <CardDescription>
-                        Add account number to your project so patients reach you
-                        fast.
-                      </CardDescription>
-                    </div>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => accounts?.append({ value: "Facebook" })}
-                      disabled={accounts?.fields?.["length"] == 4}
-                    >
-                      <Icons.add />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ProjectForm.accounts
-                    accounts={accounts}
-                    form={form as any}
-                    loading={loading}
-                  />
-                </CardContent>
-              </Card>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ProjectForm.spaces form={form as any} loading={loading} />
+                <ProjectForm.type form={form as any} loading={loading} />
+              </div>
+
+              <ProjectForm.platforms form={form as any} loading={loading} />
             </form>
           </Form>
         </>

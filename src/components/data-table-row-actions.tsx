@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 type DataTableRowActionsProps = {
   children?: React.ReactNode;
@@ -24,7 +25,7 @@ export function DataTableRowActions({ children }: DataTableRowActionsProps) {
             size="icon"
             className="data-[state=open]:bg-muted"
           >
-            <Icons.dotsHorizontal />
+            <DotsHorizontalIcon className="h-4 w-4 shrink-0" />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>

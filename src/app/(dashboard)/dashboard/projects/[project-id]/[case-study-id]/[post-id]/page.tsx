@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { BackButton } from "@/components/back-button";
 import {
@@ -10,14 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { PostUpdateForm } from "@/components/post-update-form";
 
 type CaseStudyProps = Readonly<{
@@ -45,7 +37,7 @@ export default async function CaseStudy({
         <EmptyPlaceholder className="border-none">
           <EmptyPlaceholder.Icon name="empty" />
           <EmptyPlaceholder.Title>
-            Oops, No Such CaseStudy.
+            Oops, No Such Case Study.
           </EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>
             you have not created you case study yet. start working with us.

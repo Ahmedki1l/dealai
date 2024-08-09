@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Icons } from "@/components/icons";
 
 type DataTablePaginationProps<TData> = {
   table: Table<TData>;
@@ -31,7 +30,7 @@ export function DataTablePagination<TData>({
       </div>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium whitespace-nowrap">Rows per page</p>
+          <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -75,7 +74,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to previous page</span>
-            <Icons.chevronLeft />
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
@@ -85,7 +84,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to next page</span>
-            <Icons.chevronRight />
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"

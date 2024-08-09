@@ -1,31 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { projectUpdateFormSchema } from "@/validations/projects";
 import { ProjectForm } from "@/components/project-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
 import { Project } from "@prisma/client";
 import { updateProject } from "@/actions/projects";
+
 type ProjectUpdateFormProps = {
   project: Project;
 } & Omit<DialogResponsiveProps, "open" | "setOpen">;
+
 export function ProjectUpdateForm({
-  project: { accounts: projectAccounts, ...project },
+  project,
   ...props
 }: ProjectUpdateFormProps) {
   const router = useRouter();
@@ -36,21 +32,13 @@ export function ProjectUpdateForm({
     resolver: zodResolver(projectUpdateFormSchema),
     defaultValues: {
       ...project,
-      title: project?.["title"] ?? "",
-      description: project?.["description"] ?? "",
-      city: project?.["city"] ?? "",
-      country: project?.["country"] ?? "",
-      accounts:
-        projectAccounts && Array.isArray(projectAccounts)
-          ? projectAccounts?.map((p) => ({
-              value: p,
-            }))
-          : [],
+      description: project?.["description"] ?? undefined,
+      platforms: project?.["platforms"]
+        ? project?.["platforms"]?.map((p) => ({
+            value: p,
+          }))
+        : [],
     },
-  });
-  const accounts = useFieldArray({
-    name: "accounts",
-    control: form.control,
   });
 
   function onSubmit(data: z.infer<typeof projectUpdateFormSchema>) {
@@ -58,7 +46,7 @@ export function ProjectUpdateForm({
     toast.promise(
       updateProject({
         ...data,
-        accounts: data?.["accounts"].map((p) => p?.["value"]),
+        platforms: data?.["platforms"].map((e) => e?.["value"]),
       }),
       {
         finally: () => setLoading(false),
@@ -92,10 +80,7 @@ export function ProjectUpdateForm({
       content={
         <>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="container space-y-2 md:p-0"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <ProjectForm.title form={form as any} loading={loading} />
               <ProjectForm.description form={form as any} loading={loading} />
 
@@ -103,39 +88,12 @@ export function ProjectUpdateForm({
                 <ProjectForm.distinct form={form as any} loading={loading} />
                 <ProjectForm.city form={form as any} loading={loading} />
                 <ProjectForm.country form={form as any} loading={loading} />
-                <ProjectForm.type form={form as any} loading={loading} />
                 <ProjectForm.spaces form={form as any} loading={loading} />
               </div>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Platforms</CardTitle>
-                      <CardDescription>
-                        Add account number to your project so patients reach you
-                        fast.
-                      </CardDescription>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => accounts?.append({ value: "Facebook" })}
-                      disabled={accounts?.fields?.["length"] == 4}
-                    >
-                      <Icons.add />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ProjectForm.accounts
-                    accounts={accounts}
-                    form={form as any}
-                    loading={loading}
-                  />
-                </CardContent>
-              </Card>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ProjectForm.type form={form as any} loading={loading} />
+                <ProjectForm.platforms form={form as any} loading={loading} />
+              </div>
             </form>
           </Form>
         </>

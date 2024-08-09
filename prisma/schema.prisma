@@ -18,10 +18,13 @@ model User {
   sessions Session[]
 
   name     String
-  email    String    @unique
+  email    String  @unique
   image    String?
   password String? // creadentials
-  googleId String?   @unique // googleAuth
+  googleId String? @unique @map("google-id")
+
+  createdAt DateTime @default(now())
+
   projects Project[]
 
   @@map("users")
@@ -29,90 +32,125 @@ model User {
 
 model Session {
   id        String   @id @map("_id")
-  userId    String
-  expiresAt DateTime
+  userId    String   @map("user-id")
+  expiresAt DateTime @map("expires-at")
 
   user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("sessions")
 }
 
-enum Account {
-  Facebook
-  LinkedIn
-  Instagram
-  Twitter
+enum PLATFORM {
+  FACEBOOK
+  LINKEDIN
+  INSTAGRAM
+  TWITTER
 }
 
-enum CAMPAIGN {
-  BRANDING_AWARENESS
-  ENGAGEMENT
-  SALES_CONVERSION
-}
-
-enum CONTENT_LENGTH {
-  SHORT
-  MEDIUM
-  LONG
+enum PROJECT_TYPE {
+  APARTMENTS
+  VILLAS
+  COMPOUND
 }
 
 model Project {
   id          String  @id @map("_id")
-  userId      String
+  userId      String  @map("user-id")
   title       String
   description String?
 
   country  String
   city     String
   distinct String
-  type     String
   spaces   String
-  accounts Account[]
+
+  createdAt DateTime @default(now())
+
+  type      PROJECT_TYPE
+  platforms PLATFORM[]
 
   caseStudy CaseStudy[]
-
-  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+  user      User        @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("projects")
 }
 
+enum CASE_STUDY_TYPE {
+  APARTMENT
+  VILLA
+}
+
 model CaseStudy {
-  id          String  @id @map("_id")
-  projectId   String
+  id          String   @id @map("_id")
+  projectId   String   @map("project-id")
   title       String
   description String?
+  refImages   String[] @map("ref-images")
 
-  content        String?
-  targetAudience String? @map("target-audience")
-  pros           String? @map("pros")
-  cons           String? @map("cons")
-  hashtags       String?
+  content        String
+  targetAudience String @map("target-audience")
+  pros           String @map("pros")
+  cons           String @map("cons")
+  hashtags       String
 
-  posts Post[]
+  // Unit Features
+  type       CASE_STUDY_TYPE
+  units      String
+  space      String
+  finishing  String
+  floors     String
+  rooms      String
+  bathrooms  String
+  recipients String
+  garden     String
+  pool       String
+  view       String
 
+  posts   Post[]
   project Project @relation(references: [id], fields: [projectId], onDelete: Cascade)
 
   @@map("case-studies")
 }
 
+enum POST_CAMPAIGN {
+  BRANDING_AWARENESS
+  ENGAGEMENT
+  SALES_CONVERSION
+}
+
+enum POST_CONTENT_LENGTH {
+  SHORT
+  MEDIUM
+  LONG
+}
+
+model Image {
+  id     String @id @map("_id")
+  src    String
+  prompt String
+
+  posts Post[]
+
+  @@map("images")
+}
+
 model Post {
-  id               String  @id @map("_id")
-  caseStudyId      String
-  title            String?
-  description      String?
-  imageDescription String?
+  id          String  @id @map("_id")
+  caseStudyId String  @map("case-study-id")
+  imageId     String? @map("image-id")
 
-  noOfWeeks String?
-  content   String?
-  image     String?
+  title       String
+  description String
+  noOfWeeks   String @map("no-of-weeks")
+  content     String
 
-  platform      String
-  contentLength CONTENT_LENGTH
-  campaignType  CAMPAIGN
+  platform      PLATFORM
+  contentLength POST_CONTENT_LENGTH @map("content-length")
+  campaignType  POST_CAMPAIGN       @map("campaign-type")
 
-  postAt    DateTime?
-  createdAt DateTime  @default(now())
+  postAt DateTime @map("post-at")
 
+  image     Image?    @relation(fields: [imageId], references: [id], onDelete: NoAction)
   caseStudy CaseStudy @relation(references: [id], fields: [caseStudyId], onDelete: Cascade)
 
   @@map("posts")

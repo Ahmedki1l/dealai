@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { DataTable } from "@/components/data-table";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
 import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ type ProjectsProps = Readonly<{}>;
 export const metadata: Metadata = { title: "Projects" };
 export default async function Projects({}: ProjectsProps) {
   const user = (await getAuth())?.["user"]!;
-
   const projects = await db.project.findMany({
     include: { caseStudy: { include: { posts: true } } },
     where: {
@@ -57,7 +56,7 @@ export default async function Projects({}: ProjectsProps) {
         <DataTable
           data={projects}
           columns={columns as any}
-          filterBy="name"
+          filterBy="title"
           filterOptions={[]}
         />
       </div>

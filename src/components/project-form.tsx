@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useFieldArray,
-  UseFieldArrayReturn,
-  UseFormReturn,
-} from "react-hook-form";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import {
   FormControl,
@@ -18,10 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import {
   projectCreateFormSchema,
-  // projectDeleteSchema,
-  // projectUpdateSchema,
+  projectUpdateFormSchema,
 } from "@/validations/projects";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -29,13 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { platforms, projectTypes } from "@/db/enums";
 
 type ProjectFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    z.infer<typeof projectCreateFormSchema>,
-    // | z.infer<typeof projectUpdateSchema>
-    // | z.infer<typeof projectDeleteSchema>
+    | z.infer<typeof projectCreateFormSchema>
+    | z.infer<typeof projectUpdateFormSchema>,
     any,
     undefined
   >;
@@ -52,7 +47,6 @@ export const ProjectForm = {
           <FormControl>
             <Input
               type="text"
-              className="w-full"
               placeholder="Health Center"
               disabled={loading}
               {...field}
@@ -72,7 +66,6 @@ export const ProjectForm = {
           <FormLabel>Description</FormLabel>
           <FormControl>
             <Textarea
-              className="w-full"
               placeholder="Describe your project"
               disabled={loading}
               {...field}
@@ -93,8 +86,7 @@ export const ProjectForm = {
           <FormControl>
             <Input
               type="text"
-              className="w-full"
-              placeholder="El shrouq"
+              placeholder="Nasr City"
               disabled={loading}
               {...field}
             />
@@ -114,7 +106,6 @@ export const ProjectForm = {
           <FormControl>
             <Input
               type="text"
-              className="w-full"
               placeholder="Cairo"
               disabled={loading}
               {...field}
@@ -135,28 +126,7 @@ export const ProjectForm = {
           <FormControl>
             <Input
               type="text"
-              className="w-full"
               placeholder="Egypt"
-              disabled={loading}
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  type: ({ loading, form }: ProjectFormProps) => (
-    <FormField
-      control={form.control}
-      name="type"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Type</FormLabel>
-          <FormControl>
-            <Input
-              type="text"
-              className="w-full"
               disabled={loading}
               {...field}
             />
@@ -174,67 +144,127 @@ export const ProjectForm = {
         <FormItem>
           <FormLabel>Spaces</FormLabel>
           <FormControl>
-            <Input
-              type="text"
-              className="w-full"
-              disabled={loading}
-              {...field}
-            />
+            <Input type="text" disabled={loading} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
       )}
     />
   ),
-  accounts: ({
+  type: ({ loading, form }: ProjectFormProps) => (
+    <FormField
+      control={form.control}
+      name="type"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Type</FormLabel>
+          <FormControl>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={loading}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your project type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {projectTypes?.map((e, i) => (
+                  <SelectItem key={i} value={e?.["value"]}>
+                    {e?.["label"]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ),
+  platforms: function Component({
     loading,
     form,
-    accounts: { fields, remove },
+    limit,
   }: ProjectFormProps & {
-    accounts: UseFieldArrayReturn<any, "accounts", "id">;
-  }) =>
-    fields.map((field, i) => (
-      <FormField
-        control={form.control}
-        key={i}
-        name={`accounts.${i}.value`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="sr-only">Platfrms</FormLabel>
-            <FormControl>
-              <div className="flex items-center justify-center gap-2">
-                {/* <Input type="text" disabled={loading} {...field} /> */}
+    limit?: number;
+  }) {
+    const { fields, remove, append } = useFieldArray({
+      name: "platforms",
+      control: form?.["control"],
+    });
 
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your platform" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Facebook">Facebook</SelectItem>
-                    <SelectItem value="Instagram">Instagram</SelectItem>
-                    <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                    <SelectItem value="Twitter">Twitter</SelectItem>
-                  </SelectContent>
-                </Select>
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <FormLabel>Platforms</FormLabel>
+          <Button
+            size="icon"
+            // @ts-ignore
+            onClick={() => append({})}
+            disabled={limit ? fields?.["length"] == limit : false}
+          >
+            <Icons.add />
+          </Button>
+        </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => remove(i)}
-                >
-                  <Icons.x />
-                </Button>
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    )),
+        {fields.map((field, i) => (
+          <FormField
+            control={form.control}
+            key={i}
+            name={`platforms.${i}.value`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-center justify-center gap-2">
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={loading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your platform" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {platforms?.map((e, i) => {
+                          const Icon = Icons?.[e?.["icon"]] ?? null;
+                          return (
+                            <SelectItem
+                              key={i}
+                              value={e?.["value"]}
+                              disabled={
+                                !!form
+                                  ?.getValues("platforms")
+                                  ?.find((p) => p?.["value"] === e?.["value"])
+                              }
+                              className="flex items-center gap-2"
+                            >
+                              {Icon && <Icon />} {e?.["label"]}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => remove(i)}
+                    >
+                      <Icons.x />
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+      </div>
+    );
+  },
 };

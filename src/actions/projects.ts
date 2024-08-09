@@ -1,12 +1,8 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
-import {
-  RequiresAccessError,
-  RequiresLoginError,
-  ZodError,
-} from "@/lib/exceptions";
+import { RequiresLoginError, ZodError } from "@/lib/exceptions";
 import {
   projectCreateSchema,
   projectDeleteSchema,
@@ -20,7 +16,7 @@ import { generateIdFromEntropySize } from "lucia";
 
 export async function createProject(data: z.infer<typeof projectCreateSchema>) {
   try {
-    const user = await getAuth();
+    const { user } = await getAuth();
 
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();

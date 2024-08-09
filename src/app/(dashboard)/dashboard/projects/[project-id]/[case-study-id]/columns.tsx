@@ -12,6 +12,7 @@ import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/avatar";
 import { Icons } from "@/components/icons";
+import { platforms } from "@/db/enums";
 
 export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
   {
@@ -24,7 +25,9 @@ export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
         <Avatar
           user={{
             name: r?.["title"],
-            image: r?.["image"],
+            image:
+              //  r?.["image"]
+              null,
           }}
           icon={{
             name: "analytics",
@@ -58,23 +61,14 @@ export const columns: ColumnDef<Post & Pick<CaseStudy, "projectId">>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Platforms" />
     ),
-    cell: ({ row: { original: r } }) => (
-      <div className="flex items-center gap-2">
-        {
-          r?.["platform"] === "Facebook" ? (
-            <Icons.facebook  />
-          ) : r?.["platform"] === "Instagram" ? (
-            <Icons.instagram />
-          ) : r?.["platform"] === "LinkedIn" ? (
-            <Icons.linkedIn />
-          ) : r?.["platform"] === "Twitter" ? (
-            <Icons.twitter />
-          ): (
-            "---"
-          )
-        }
-      </div>
-    ),
+    cell: ({ row: { original: r } }) => {
+      const p = platforms.find((p) => p?.["value"] === r?.["platform"]);
+      if (!p) return "---";
+
+      const Icon = Icons?.[p?.["icon"]] ?? null;
+
+      return <Icon />;
+    },
     enableSorting: false,
     enableHiding: false,
   },

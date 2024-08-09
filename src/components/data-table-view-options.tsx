@@ -26,7 +26,7 @@ export function DataTableViewOptions<TData>({
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hidden sm:flex h-8 lg:flex"
+          className="ml-auto hidden h-8 sm:flex lg:flex"
         >
           <MixerHorizontalIcon className="mr-2 h-4 w-4" />
           View
@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide()
+              typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
           .map((column) => {
             return (

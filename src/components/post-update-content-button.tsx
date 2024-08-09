@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Icons } from "@/components/icons";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { postUpdateContentSchema } from "@/validations/posts";
-import { createPost, updatePost } from "@/actions/posts";
+import { updatePost } from "@/actions/posts";
 import { PostForm } from "@/components/post-form";
 import { DialogResponsive, DialogResponsiveProps } from "@/components/dialog";
 import { Post } from "@prisma/client";
@@ -64,10 +64,7 @@ export function PostUpdateContentButton({
       content={
         <>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 md:p-0"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <PostForm.content form={form as any} loading={loading} />
             </form>
           </Form>

@@ -33,7 +33,7 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         {filterBy && (
           <Input
-            placeholder="Filter tasks..."
+            placeholder="Filter ..."
             value={
               (table.getColumn(filterBy)?.getFilterValue() as string) ?? ""
             }

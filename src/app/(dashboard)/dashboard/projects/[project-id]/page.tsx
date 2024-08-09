@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { BackButton } from "@/components/back-button";
 import { DataTable } from "@/components/data-table";
@@ -28,13 +28,6 @@ export default async function Project({
       id: projectId,
     },
   });
-  const tabs = [
-    { label: "Case Study", value: "case-study", component: <>case study</> },
-    { label: "Posts", value: "posts", component: <>posts</> },
-    // { label: "Create Post", value: "create-post", component: <CreatePost /> },
-    // { label: "Posts", value: "posts", component: <Posts /> },
-    // { label: "Schedule", value: "schedule", component: <ScheduleForm /> },
-  ];
 
   if (!project)
     return (

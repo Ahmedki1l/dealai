@@ -19,6 +19,7 @@ import { Post } from "@prisma/client";
 type PostUpdateScheduleButtonProps = {
   post: Post;
 } & Omit<DialogResponsiveProps, "open" | "setOpen">;
+
 export function PostUpdateScheduleButton({
   post,
   ...props
@@ -65,10 +66,7 @@ export function PostUpdateScheduleButton({
       content={
         <>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 md:p-0"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <PostForm.postAt form={form as any} loading={loading} />
             </form>
           </Form>

@@ -1,40 +1,44 @@
 import { z } from "@/lib/zod";
-import { platform } from "os";
+import { PLATFORM, POST_CAMPAIGN, POST_CONTENT_LENGTH } from "@prisma/client";
+import {
+  platformsArr,
+  postCampaignArr,
+  postContentLengthArr,
+} from "@/db/enums";
 
-export const postInsertSchema = z.object({
+export const postSchema = z.object({
   id: z.string("id"),
   caseStudyId: z.string("caseStudyId"),
+  imageId: z.string("imageId"),
   title: z.string("title"),
-  description: z.string("description").optional(),
-  imageDescription: z.string("image description").optional(),
-  contentLength: z.enum(["SHORT", "MEDIUM", "LONG"]),
-  campaignType: z.enum([
-    "BRANDING_AWARENESS",
-    "ENGAGEMENT",
-    "SALES_CONVERSION",
-  ]),
-  postAt: z.date("post at").optional(),
-  content: z.string("content").optional(),
-  noOfWeeks: z.string("no of weeks").optional(),
-  image: z.string("image").optional(),
-  platform: z.string("platform"),
+  description: z.string("description"),
+  content: z.string("content"),
+  noOfWeeks: z.string("no of weeks"),
+  campaignType: z.enum(postCampaignArr as [POST_CAMPAIGN]),
+  contentLength: z.enum(postContentLengthArr as [POST_CONTENT_LENGTH]),
+  platform: z.enum(platformsArr as [PLATFORM]),
+  postAt: z.date("post at"),
 });
 
-export const postCreateSchema = postInsertSchema.omit({ id: true });
-export const postCreateFormSchema = postCreateSchema;
-export const postUpdateSchema = postInsertSchema.omit({
+export const postCreateSchema = postSchema.omit({
+  id: true,
+  imageId: true,
+});
+export const postUpdateSchema = postSchema.omit({
   caseStudyId: true,
 });
-export const postUpdateContentSchema = postInsertSchema.pick({
+
+export const postUpdateContentSchema = postSchema.pick({
   id: true,
   content: true,
 });
-export const postUpdateImageSchema = postInsertSchema.pick({
+export const postUpdateImageSchema = postSchema.pick({
   id: true,
-  image: true,
+  imageId: true,
 });
-export const postUpdateScheduleSchema = postInsertSchema.pick({
+export const postUpdateScheduleSchema = postSchema.pick({
   id: true,
   postAt: true,
 });
-export const postDeleteSchema = postInsertSchema.pick({ id: true });
+
+export const postDeleteSchema = postSchema.pick({ id: true });
