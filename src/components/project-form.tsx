@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { platforms, projectTypes } from "@/db/enums";
+import { platforms, propertiesTypes } from "@/db/enums";
 
 type ProjectFormProps = {
   loading: boolean;
@@ -151,10 +151,10 @@ export const ProjectForm = {
       )}
     />
   ),
-  type: ({ loading, form }: ProjectFormProps) => (
+  propertiesType: ({ loading, form }: ProjectFormProps) => (
     <FormField
       control={form.control}
-      name="type"
+      name="propertiesType"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Type</FormLabel>
@@ -170,7 +170,7 @@ export const ProjectForm = {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {projectTypes?.map((e, i) => (
+                {propertiesTypes?.map((e, i) => (
                   <SelectItem key={i} value={e?.["value"]}>
                     {e?.["label"]}
                   </SelectItem>

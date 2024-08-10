@@ -85,7 +85,10 @@ export function ProjectCreateButton({
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <ProjectForm.spaces form={form as any} loading={loading} />
-                <ProjectForm.type form={form as any} loading={loading} />
+                <ProjectForm.propertiesType
+                  form={form as any}
+                  loading={loading}
+                />
               </div>
 
               <ProjectForm.platforms form={form as any} loading={loading} />

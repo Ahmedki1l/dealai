@@ -37,7 +37,7 @@ import { Icons } from "@/components/icons";
 import { PostUpdateContentButton } from "@/components/post-update-content-button";
 import { PostUpdateScheduleButton } from "@/components/post-update-schedule-button";
 import Link from "next/link";
-import { platforms, platformsArr } from "@/db/enums";
+import { platforms } from "@/db/enums";
 
 type CaseStudyProps = Readonly<{
   params: { "project-id": string; "case-study-id": string };
@@ -118,6 +118,14 @@ export default async function CaseStudy({
             <AccordionItem value="cons">
               <AccordionTrigger>Cons</AccordionTrigger>
               <AccordionContent>{caseStudy?.["cons"]}</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="images">
+              <AccordionTrigger>Reference Images</AccordionTrigger>
+              <AccordionContent className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {caseStudy?.["refImages"]?.map((e, i) => (
+                  <Image key={i} src={e} alt="" />
+                ))}
+              </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>

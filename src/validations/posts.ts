@@ -1,5 +1,4 @@
 import { z } from "@/lib/zod";
-import { PLATFORM, POST_CAMPAIGN, POST_CONTENT_LENGTH } from "@prisma/client";
 import {
   platformsArr,
   postCampaignArr,
@@ -14,9 +13,9 @@ export const postSchema = z.object({
   description: z.string("description"),
   content: z.string("content"),
   noOfWeeks: z.string("no of weeks"),
-  campaignType: z.enum(postCampaignArr as [POST_CAMPAIGN]),
-  contentLength: z.enum(postContentLengthArr as [POST_CONTENT_LENGTH]),
-  platform: z.enum(platformsArr as [PLATFORM]),
+  campaignType: z.enum(postCampaignArr),
+  contentLength: z.enum(postContentLengthArr),
+  platform: z.enum(platformsArr),
   postAt: z.date("post at"),
 });
 

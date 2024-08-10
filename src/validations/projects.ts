@@ -1,20 +1,23 @@
 import { z } from "@/lib/zod";
-import { PLATFORM, Project, PROJECT_TYPE } from "@prisma/client";
-import { platformsArr, projectTypesArr } from "@/db/enums";
+import { platformsArr, propertiesTypesArr } from "@/db/enums";
 
-export const projectSchema = z.object({
-  id: z.string("id"),
-  userId: z.string("userId"),
-  title: z.string("title"),
-  description: z.string("description").optional(),
-  distinct: z.string("distinct"),
-  city: z.string("city"),
-  country: z.string("country"),
-  spaces: z.string("spaces"),
+export const projectSchema = z.object(
+  // <Record<keyof Project, any>>
+  {
+    id: z.string("id"),
+    userId: z.string("userId"),
+    title: z.string("title"),
+    description: z.string("description").optional(),
 
-  type: z.enum(projectTypesArr as [PROJECT_TYPE]),
-  platforms: z.array(z.enum(platformsArr as [PLATFORM])),
-});
+    distinct: z.string("distinct"),
+    city: z.string("city"),
+    country: z.string("country"),
+    spaces: z.string("spaces"),
+
+    propertiesType: z.enum(propertiesTypesArr),
+    platforms: z.array(z.enum(platformsArr)),
+  },
+);
 
 export const projectCreateSchema = projectSchema.omit({ id: true });
 export const projectCreateFormSchema = projectCreateSchema
@@ -23,7 +26,7 @@ export const projectCreateFormSchema = projectCreateSchema
     z.object({
       platforms: z.array(
         z.object({
-          value: z.enum(platformsArr as [PLATFORM]),
+          value: z.enum(platformsArr),
         }),
       ),
     }),
@@ -36,7 +39,7 @@ export const projectUpdateFormSchema = projectUpdateSchema
     z.object({
       platforms: z.array(
         z.object({
-          value: z.enum(platformsArr as [PLATFORM]),
+          value: z.enum(platformsArr),
         }),
       ),
     }),

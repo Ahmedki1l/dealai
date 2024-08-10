@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import {
   FormControl,
@@ -11,16 +11,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  caseStudyCreateSchema,
-  caseStudyUpdateSchema,
+  caseStudyCreateFormSchema,
+  caseStudyUpdateFormSchema,
 } from "@/validations/case-studies";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "./ui/button";
+import { Icons } from "./icons";
+import { convertBase64 } from "@/lib/utils";
+import { Image } from "./image";
 
 type CaseStudyFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    | z.infer<typeof caseStudyCreateSchema>
-    | z.infer<typeof caseStudyUpdateSchema>,
+    | z.infer<typeof caseStudyCreateFormSchema>
+    | z.infer<typeof caseStudyUpdateFormSchema>,
     any,
     undefined
   >;
@@ -66,6 +77,82 @@ export const CaseStudyForm = {
       )}
     />
   ),
+  refImages: function Component({
+    loading,
+    form,
+    limit,
+  }: CaseStudyFormProps & {
+    limit?: number;
+  }) {
+    const { fields, remove, append } = useFieldArray({
+      name: "refImages",
+      control: form?.["control"],
+    });
+
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <FormLabel>Reference Image</FormLabel>
+          <Button
+            size="icon"
+            // @ts-ignore
+            onClick={() => append({})}
+            disabled={limit ? fields?.["length"] == limit : false}
+          >
+            <Icons.add />
+          </Button>
+        </div>
+
+        {fields.map((field, i) => (
+          <FormField
+            control={form.control}
+            key={i}
+            name={`refImages.${i}.file`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-center justify-center gap-2">
+                    <Input
+                      type="file"
+                      {...field}
+                      value={undefined}
+                      onChange={async (e) => {
+                        const file = e?.["target"]?.["files"]?.[0];
+                        if (file) {
+                          const base64 = (
+                            await convertBase64(file)
+                          )?.toString();
+
+                          field.onChange(file);
+                          form.setValue(`refImages.${i}.base64`, base64 ?? "");
+                        }
+                      }}
+                    />
+                    {form.getValues(`refImages.${i}.base64`) ? (
+                      <Image
+                        src={form.getValues(`refImages.${i}.base64`)}
+                        alt=""
+                        className="h-8 w-8"
+                      />
+                    ) : null}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => remove(i)}
+                    >
+                      <Icons.x />
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+      </div>
+    );
+  },
   content: ({ loading, form }: CaseStudyFormProps) => (
     <FormField
       control={form.control}
@@ -136,156 +223,6 @@ export const CaseStudyForm = {
               disabled={loading}
               {...field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  units: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="units"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Units</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  space: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="space"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Space</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  finishing: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="finishing"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Finishing</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  floors: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="floors"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Floors</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  rooms: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="rooms"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Rooms</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  bathrooms: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="bathrooms"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Bathrooms</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  recipients: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="recipients"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Recipients</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  garden: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="garden"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Garden</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  pool: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="pool"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Pool</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  view: ({ loading, form }: CaseStudyFormProps) => (
-    <FormField
-      control={form.control}
-      name="view"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>View</FormLabel>
-          <FormControl>
-            <Input type="text" disabled={loading} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

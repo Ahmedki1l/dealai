@@ -4,18 +4,16 @@ import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
 import { RequiresLoginError, ZodError } from "@/lib/exceptions";
 import {
-  caseStudyCreateSchema,
-  caseStudyDeleteSchema,
-  caseStudyUpdateSchema,
-} from "@/validations/case-studies";
+  propertyCreateSchema,
+  propertyDeleteSchema,
+  propertyUpdateSchema,
+} from "@/validations/properties";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
-import { Project } from "@prisma/client";
 
-export async function createCaseStudy(
-  data: z.infer<typeof caseStudyCreateSchema>,
-  project: Project,
+export async function createProperty(
+  data: z.infer<typeof propertyCreateSchema>,
 ) {
   try {
     const { user } = await getAuth();
@@ -23,27 +21,8 @@ export async function createCaseStudy(
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
 
-    const result = {
-      input: `create a casestudy about ${project.title} ${project?.["propertiesType"]} located in: ${project.distinct}, ${project.city}, ${project.country}, which has a land space of: ${project.spaces}, ${project.description}. Create the Hashtags for ${project?.["platforms"]}`,
-    };
-    const endpoint = process.env.NEXT_PUBLIC_AI_API + "/chat/casestudy";
-
-    // Send data to the server
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(result),
-    }).then((r) => r?.json());
-
-    data.content = response["Case_Study"];
-    data.targetAudience = response["Target_Audience"];
-    data.pros = response["Pros"];
-    data.cons = response["Cons"];
-
     const id = generateIdFromEntropySize(10);
-    await db.caseStudy.create({
+    await db.property.create({
       data: {
         id,
         ...data,
@@ -61,16 +40,16 @@ export async function createCaseStudy(
   }
 }
 
-export async function updateCaseStudy({
+export async function updateProperty({
   id,
   ...data
-}: z.infer<typeof caseStudyUpdateSchema>) {
+}: z.infer<typeof propertyUpdateSchema>) {
   try {
     const { user } = await getAuth();
 
     if (!user) throw new RequiresLoginError();
 
-    await db.caseStudy.update({
+    await db.property.update({
       data,
       where: {
         id,
@@ -88,15 +67,15 @@ export async function updateCaseStudy({
   }
 }
 
-export async function deleteCaseStudy({
+export async function deleteProperty({
   id,
-}: z.infer<typeof caseStudyDeleteSchema>) {
+}: z.infer<typeof propertyDeleteSchema>) {
   try {
     const { user } = await getAuth();
 
     if (!user) throw new RequiresLoginError();
 
-    await db.caseStudy.delete({ where: { id } });
+    await db.property.delete({ where: { id } });
 
     revalidatePath("/", "layout");
   } catch (error: any) {

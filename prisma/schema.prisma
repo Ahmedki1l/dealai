@@ -47,7 +47,7 @@ enum PLATFORM {
   TWITTER
 }
 
-enum PROJECT_TYPE {
+enum PROPERTIES_TYPE {
   APARTMENTS
   VILLAS
   COMPOUND
@@ -66,18 +66,14 @@ model Project {
 
   createdAt DateTime @default(now())
 
-  type      PROJECT_TYPE
-  platforms PLATFORM[]
+  propertiesType PROPERTIES_TYPE @map("properties-type")
+  platforms      PLATFORM[]
 
+  property  Property[]
   caseStudy CaseStudy[]
   user      User        @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("projects")
-}
-
-enum CASE_STUDY_TYPE {
-  APARTMENT
-  VILLA
 }
 
 model CaseStudy {
@@ -93,8 +89,23 @@ model CaseStudy {
   cons           String @map("cons")
   hashtags       String
 
-  // Unit Features
-  type       CASE_STUDY_TYPE
+  posts   Post[]
+  project Project @relation(references: [id], fields: [projectId], onDelete: Cascade)
+
+  @@map("case-studies")
+}
+
+enum PROPERTY_TYPE {
+  APARTMENT
+  VILLA
+}
+
+model Property {
+  id        String @id @map("_id")
+  projectId String @map("project-id")
+  title     String
+
+  type       PROPERTY_TYPE
   units      String
   space      String
   finishing  String
@@ -103,13 +114,12 @@ model CaseStudy {
   bathrooms  String
   recipients String
   garden     String
-  pool       String
+  pool       String?
   view       String
 
-  posts   Post[]
   project Project @relation(references: [id], fields: [projectId], onDelete: Cascade)
 
-  @@map("case-studies")
+  @@map("properties")
 }
 
 enum POST_CAMPAIGN {

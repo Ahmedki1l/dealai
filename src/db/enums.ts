@@ -1,18 +1,19 @@
 import { SelectItem } from "@/types";
 import { getEnumArray } from "@/db/utils";
 import {
-  CASE_STUDY_TYPE,
+  PROPERTY_TYPE,
   PLATFORM,
   POST_CAMPAIGN,
   POST_CONTENT_LENGTH,
-  PROJECT_TYPE,
+  PROPERTIES_TYPE,
 } from "@prisma/client";
 import { Icons } from "@/components/icons";
 
 export const platformsArr = getEnumArray<PLATFORM>(PLATFORM);
 
-export const projectTypesArr = getEnumArray<PROJECT_TYPE>(PROJECT_TYPE);
-export const caseStudyTypesArr = getEnumArray<CASE_STUDY_TYPE>(CASE_STUDY_TYPE);
+export const propertiesTypesArr =
+  getEnumArray<PROPERTIES_TYPE>(PROPERTIES_TYPE);
+export const propertyTypesArr = getEnumArray<PROPERTY_TYPE>(PROPERTY_TYPE);
 
 export const postCampaignArr = getEnumArray<POST_CAMPAIGN>(POST_CAMPAIGN);
 export const postContentLengthArr =
@@ -29,7 +30,7 @@ export const platforms = platformsArr.map(
       icon: e?.toLowerCase() as keyof typeof Icons, // already satisfied
     }) satisfies SelectItem,
 );
-export const projectTypes = projectTypesArr.map(
+export const propertiesTypes = propertiesTypesArr.map(
   (e) =>
     ({
       value: e,
@@ -39,7 +40,7 @@ export const projectTypes = projectTypesArr.map(
         .join(" "),
     }) satisfies SelectItem,
 );
-export const caseStudyTypes = caseStudyTypesArr.map(
+export const propertyTypes = propertyTypesArr.map(
   (e) =>
     ({
       value: e,

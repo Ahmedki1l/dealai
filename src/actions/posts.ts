@@ -19,6 +19,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
 import { Post, Project } from "@prisma/client";
+import { platformsArr } from "@/db/enums";
 
 export async function createPost(
   data: z.infer<typeof postCreateSchema>,
@@ -34,11 +35,10 @@ export async function createPost(
       data.campaignType === "ENGAGEMENT"
         ? 5
         : 3;
-
     const result = {
       input: `create a social media content plan that consists of ${noOfPostsPerWeek * weeks} posts for each platform for a period of ${data.noOfWeeks} weeks, for the platforms ${project?.["platforms"]}. The content should be long and includes hashtags and emojis.`,
     };
-
+    console.log(result);
     const domain = process.env.NEXT_PUBLIC_AI_API;
     const endpoint = domain + "/chat/socialmediaplan";
 
@@ -48,69 +48,80 @@ export async function createPost(
       body: JSON.stringify(result),
     }).then((r) => r?.json());
 
-    const daysToPost = noOfPostsPerWeek === 3 ? [0, 2, 4] : [0, 1, 2, 3, 4];
-    const imageApiEndpoint = domain + "/image";
-    let imageFetchPromises = [];
-    let allPostDetails: Omit<Post, "imageId">[] = [];
+    console.log(response);
+    // const daysToPost = noOfPostsPerWeek === 3 ? [0, 2, 4] : [0, 1, 2, 3, 4];
+    // const imageApiEndpoint = domain + "/image";
+    // let imageFetchPromises = [];
+    // let allPostDetails: Omit<Post, "imageId">[] = [];
 
-    for (const acc of project?.["platforms"]) {
-      const accountPosts =
-        response?.[`${acc?.[0]?.toUpperCase()}${acc?.slice(1)?.toLowerCase()}`];
+    // // uppercasing key, to match platform
+    // const responseData = Object.keys(response).reduce(
+    //   (acc, key) => {
+    //     acc[key.toUpperCase()] = response?.[key];
+    //     return acc;
+    //   },
+    //   {} as { [key: string]: { [key: string]: string }[] },
+    // );
 
-      // Calculate the starting date for each account to ensure unique dates
-      let currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1); // Start from the next day
+    // for (const acc of platformsArr) {
+    //   const accountPosts = responseData?.[acc];
 
-      for (let i = 0; i < accountPosts.length; i++) {
-        // Adjust currentDate to the next valid posting day
-        while (
-          currentDate.getDay() === 5 ||
-          currentDate.getDay() === 6 ||
-          !daysToPost.includes(currentDate.getDay())
-        ) {
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
+    //   if (!accountPosts?.["length"]) continue;
 
-        const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
-        currentDate.setHours(randomHour, 0, 0);
+    //   // Calculate the starting date for each account to ensure unique dates
+    //   let currentDate = new Date();
+    //   currentDate.setDate(currentDate.getDate() + 1); // Start from the next day
 
-        const imagePrompt = { input: accountPosts[i][`Post${i + 1}`] };
-        const fetchPromise = fetch(imageApiEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(imagePrompt),
-        }).then((res) => res.json());
+    //   for (let i = 0; i < accountPosts.length; i++) {
+    //     // Adjust currentDate to the next valid posting day
+    //     while (
+    //       currentDate.getDay() === 5 ||
+    //       currentDate.getDay() === 6 ||
+    //       !daysToPost.includes(currentDate.getDay())
+    //     ) {
+    //       currentDate.setDate(currentDate.getDate() + 1);
+    //     }
 
-        imageFetchPromises.push(fetchPromise);
+    //     const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
+    //     currentDate.setHours(randomHour, 0, 0);
 
-        fetchPromise.then((imageData) => {
-          allPostDetails.push({
-            ...data,
-            id: generateIdFromEntropySize(10),
-            title: `Post${i + 1}`,
-            content: accountPosts[i][`Post${i + 1}`],
-            platform: acc,
-            postAt: new Date(currentDate),
-            // image: imageData.url,
-          });
+    //     const imagePrompt = { input: accountPosts[i][`Post${i + 1}`] };
+    //     const fetchPromise = fetch(imageApiEndpoint, {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(imagePrompt),
+    //     }).then((res) => res.json());
 
-          // Increment the date for the next post
-          currentDate.setDate(currentDate.getDate() + 1);
-        });
-      }
-    }
+    //     imageFetchPromises.push(fetchPromise);
 
-    await Promise.all(imageFetchPromises);
+    //     fetchPromise.then((imageData) => {
+    //       allPostDetails.push({
+    //         ...data,
+    //         id: generateIdFromEntropySize(10),
+    //         title: `Post${i + 1}`,
+    //         content: accountPosts[i][`Post${i + 1}`],
+    //         platform: acc,
+    //         postAt: new Date(currentDate),
+    //         // image: imageData.url,
+    //       });
 
-    if (allPostDetails.length > 0) {
-      await db.post.createMany({
-        data: allPostDetails,
-      });
+    //       // Increment the date for the next post
+    //       currentDate.setDate(currentDate.getDate() + 1);
+    //     });
+    //   }
+    // }
 
-      revalidatePath("/", "layout");
-    } else {
-      console.log("No posts to create.");
-    }
+    // await Promise.all(imageFetchPromises);
+
+    // if (allPostDetails.length > 0) {
+    //   await db.post.createMany({
+    //     data: allPostDetails,
+    //   });
+
+    //   revalidatePath("/", "layout");
+    // } else {
+    //   console.log("No posts to create.");
+    // }
   } catch (error: any) {
     console.log(error?.["message"]);
     if (error instanceof z.ZodError) return new ZodError(error);

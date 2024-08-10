@@ -5,6 +5,9 @@ const nextConfig = {
       dynamic: 30, // force page caching for 30s
     },
     serverComponentsExternalPackages: ["@node-rs/argon2"],
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
   },
   images: {
     remotePatterns: [

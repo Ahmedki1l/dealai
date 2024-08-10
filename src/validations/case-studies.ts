@@ -1,43 +1,67 @@
-import { caseStudyTypesArr } from "@/db/enums";
 import { z } from "@/lib/zod";
-import { CASE_STUDY_TYPE } from "@prisma/client";
 
-export const caseStudySchema = z.object({
-  id: z.string("id"),
-  projectId: z.string("projectId"),
-  title: z.string("title"),
-  description: z.string("description").optional(),
-  refImages: z.array(z.string("reference image")),
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
+const ACCEPTED_FILE_TYPES = ["image/png"];
 
-  content: z.string("content"),
-  targetAudience: z.string("targetAudience"),
-  pros: z.string("pros"),
-  cons: z.string("pros"),
-  hashtags: z.string("hashtags"),
+export const caseStudySchema = z.object(
+  // <Record<keyof CaseStudy, any>>
+  {
+    id: z.string("id"),
+    projectId: z.string("projectId"),
+    title: z.string("title"),
+    description: z.string("description").optional(),
+    refImages: z.array(z.string("reference image")),
 
-  // Unit Features
-  type: z.enum(caseStudyTypesArr as [CASE_STUDY_TYPE]),
-  units: z.string("units"),
-  space: z.string("space"),
-  finishing: z.string("finishing"),
-  floors: z.string("floors"),
-  rooms: z.string("rooms"),
-  bathrooms: z.string("bathrooms"),
-  recipients: z.string("recipients"),
-  garden: z.string("garden"),
-  pool: z.string("hashtags"),
-  view: z.string("view"),
-});
+    content: z.string("content"),
+    targetAudience: z.string("targetAudience"),
+    pros: z.string("pros"),
+    cons: z.string("cons"),
+    hashtags: z.string("hashtags"),
+  },
+);
 
-export const caseStudyCreateSchema = caseStudySchema.omit({
-  id: true,
-  // content: true,
-  // targetAudience: true,
-  // pros: true,
-  // cons: true,
-  // hashtags: true,
-});
-export const caseStudyUpdateSchema = caseStudySchema.omit({
-  projectId: true,
-});
+export const caseStudyCreateSchema = caseStudySchema.omit({ id: true });
+export const caseStudyCreateFormSchema = caseStudyCreateSchema
+  .omit({
+    refImages: true,
+  })
+  .and(
+    z.object({
+      refImages: z.array(
+        z.object({
+          file: z
+            .instanceof(File)
+            .refine((file) => {
+              return !file || file.size <= MAX_UPLOAD_SIZE;
+            }, "File size must be less than 5MB")
+            .refine((file) => {
+              return ACCEPTED_FILE_TYPES.includes(file.type);
+            }, "File must be a PNG"),
+          base64: z.string("base64"),
+        }),
+      ),
+    }),
+  );
+
+export const caseStudyUpdateSchema = caseStudySchema.omit({ projectId: true });
+export const caseStudyUpdateFormSchema = caseStudyUpdateSchema
+  .omit({ refImages: true })
+  .and(
+    z.object({
+      refImages: z.array(
+        z.object({
+          file: z
+            .instanceof(File)
+            .refine((file) => {
+              return !file || file.size <= MAX_UPLOAD_SIZE;
+            }, "File size must be less than 5MB")
+            .refine((file) => {
+              return ACCEPTED_FILE_TYPES.includes(file.type);
+            }, "File must be a PNG"),
+          base64: z.string("base64"),
+        }),
+      ),
+    }),
+  );
+
 export const caseStudyDeleteSchema = caseStudySchema.pick({ id: true });
