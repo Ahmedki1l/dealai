@@ -113,9 +113,9 @@ model Property {
   rooms      String
   bathrooms  String
   recipients String
-  garden     String
+  garden     String?
   pool       String?
-  view       String
+  view       String?
 
   project Project @relation(references: [id], fields: [projectId], onDelete: Cascade)
 

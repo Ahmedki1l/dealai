@@ -2,8 +2,6 @@ import { Metadata } from "next";
 import { db } from "@/db";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { BackButton } from "@/components/back-button";
-import { Button } from "@/components/ui/button";
-import { PostCreateButton } from "@/components/post-create-button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,32 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Image } from "@/components/image";
-import { Icons } from "@/components/icons";
-import { PostUpdateContentButton } from "@/components/post-update-content-button";
-import { PostUpdateScheduleButton } from "@/components/post-update-schedule-button";
-import Link from "next/link";
-import { platforms, platformsArr } from "@/db/enums";
+import { CardDescription } from "@/components/ui/card";
 
 type CaseStudyProps = Readonly<{
   params: { "project-id": string; "property-id": string };
@@ -48,7 +21,7 @@ export default async function CaseStudy({
   params: { "project-id": projectId, "property-id": propertyId },
 }: CaseStudyProps) {
   const property = await db.property.findFirst({
-    include: { posts: true, project: true },
+    include: { project: true },
     where: {
       id: propertyId,
     },

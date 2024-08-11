@@ -1,6 +1,11 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import {
+  ControllerProps,
+  useFieldArray,
+  UseFieldArrayRemove,
+  UseFormReturn,
+} from "react-hook-form";
 import * as z from "zod";
 import {
   FormControl,
@@ -11,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  propertyCreateFormSchema,
   propertyCreateSchema,
   propertyUpdateSchema,
 } from "@/validations/properties";
@@ -22,21 +28,103 @@ import {
   SelectValue,
 } from "./ui/select";
 import { propertyTypes } from "@/db/enums";
+import { Button } from "./ui/button";
+import { Icons } from "./icons";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 type PropertyFormProps = {
   loading: boolean;
   form: UseFormReturn<
-    z.infer<typeof propertyCreateSchema> | z.infer<typeof propertyUpdateSchema>,
+    z.infer<typeof propertyCreateFormSchema>,
+    // | z.infer<typeof propertyCreateSchema>
+    // | z.infer<typeof propertyUpdateSchema>,
     any,
     undefined
   >;
 };
 
 export const PropertyForm = {
-  title: ({ loading, form }: PropertyFormProps) => (
+  type: function Component({
+    loading,
+    form,
+    typeIndex,
+    remove,
+  }: PropertyFormProps & {
+    typeIndex: number;
+    remove: UseFieldArrayRemove;
+  }) {
+    return (
+      <FormField
+        control={form.control}
+        name={`types.${typeIndex}.value`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex items-center justify-center gap-2">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={loading}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your property type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {propertyTypes?.map((e, i) => {
+                      // const Icon = Icons?.[e?.["icon"]] ?? null;
+                      return (
+                        <SelectItem
+                          key={i}
+                          value={e?.["value"]}
+                          disabled={
+                            !!form
+                              ?.getValues("types")
+                              ?.find((p) => p?.["value"] === e?.["value"])
+                          }
+                          className="flex items-center gap-2"
+                        >
+                          {/* {Icon && <Icon />}  */}
+
+                          {e?.["label"]}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => remove(typeIndex)}
+                >
+                  <Icons.x />
+                </Button>
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  },
+  title: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="title"
+      name={`types.${typeIndex}.properties.${propertyIndex}.title`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Title</FormLabel>
@@ -53,10 +141,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  units: ({ loading, form }: PropertyFormProps) => (
+  units: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="units"
+      name={`types.${typeIndex}.properties.${propertyIndex}.units`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Units</FormLabel>
@@ -68,42 +161,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  type: ({ loading, form }: PropertyFormProps) => (
+  space: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="type"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Type</FormLabel>
-          <FormControl>
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-              disabled={loading}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your project type" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {propertyTypes?.map((e, i) => (
-                  <SelectItem key={i} value={e?.["value"]}>
-                    {e?.["label"]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
-  space: ({ loading, form }: PropertyFormProps) => (
-    <FormField
-      control={form.control}
-      name="space"
+      name={`types.${typeIndex}.properties.${propertyIndex}.space`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Space</FormLabel>
@@ -115,10 +181,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  finishing: ({ loading, form }: PropertyFormProps) => (
+  finishing: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="finishing"
+      name={`types.${typeIndex}.properties.${propertyIndex}.finishing`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Finishing</FormLabel>
@@ -130,10 +201,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  floors: ({ loading, form }: PropertyFormProps) => (
+  floors: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="floors"
+      name={`types.${typeIndex}.properties.${propertyIndex}.floors`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Floors</FormLabel>
@@ -145,10 +221,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  rooms: ({ loading, form }: PropertyFormProps) => (
+  rooms: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="rooms"
+      name={`types.${typeIndex}.properties.${propertyIndex}.rooms`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Rooms</FormLabel>
@@ -160,10 +241,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  bathrooms: ({ loading, form }: PropertyFormProps) => (
+  bathrooms: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="bathrooms"
+      name={`types.${typeIndex}.properties.${propertyIndex}.bathrooms`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Bathrooms</FormLabel>
@@ -175,10 +261,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  recipients: ({ loading, form }: PropertyFormProps) => (
+  recipients: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="recipients"
+      name={`types.${typeIndex}.properties.${propertyIndex}.recipients`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Recipients</FormLabel>
@@ -190,10 +281,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  garden: ({ loading, form }: PropertyFormProps) => (
+  garden: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="garden"
+      name={`types.${typeIndex}.properties.${propertyIndex}.garden`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Garden</FormLabel>
@@ -205,10 +301,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  pool: ({ loading, form }: PropertyFormProps) => (
+  pool: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="pool"
+      name={`types.${typeIndex}.properties.${propertyIndex}.pool`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Pool</FormLabel>
@@ -220,10 +321,15 @@ export const PropertyForm = {
       )}
     />
   ),
-  view: ({ loading, form }: PropertyFormProps) => (
+  view: ({
+    loading,
+    form,
+    typeIndex,
+    propertyIndex,
+  }: PropertyFormProps & { typeIndex: number; propertyIndex: number }) => (
     <FormField
       control={form.control}
-      name="view"
+      name={`types.${typeIndex}.properties.${propertyIndex}.view`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>View</FormLabel>

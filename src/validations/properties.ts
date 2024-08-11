@@ -16,15 +16,24 @@ export const propertySchema = z.object(
     rooms: z.string("rooms"),
     bathrooms: z.string("bathrooms"),
     recipients: z.string("recipients"),
-    garden: z.string("garden"),
-    pool: z.string("hashtags"),
-    view: z.string("view"),
+    garden: z.string("garden").optional(),
+    pool: z.string("pool").optional(),
+    view: z.string("view").optional(),
   },
 );
 
 export const propertyCreateSchema = propertySchema.omit({
   id: true,
 });
+export const propertyCreateFormSchema = z.object({
+  types: z.array(
+    z.object({
+      value: z.enum(propertyTypesArr),
+      properties: z.array(propertyCreateSchema.omit({ type: true })),
+    }),
+  ),
+});
+
 export const propertyUpdateSchema = propertySchema.omit({
   projectId: true,
 });

@@ -55,7 +55,7 @@ export default async function Projects({}: ProjectsProps) {
         </div>
         <DataTable
           data={projects}
-          columns={columns as any}
+          columns={columns}
           filterBy="title"
           filterOptions={[]}
         />

@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
 import { RequiresLoginError, ZodError } from "@/lib/exceptions";
 import {
+  propertyCreateFormSchema,
   propertyCreateSchema,
   propertyDeleteSchema,
   propertyUpdateSchema,
@@ -13,7 +14,7 @@ import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
 
 export async function createProperty(
-  data: z.infer<typeof propertyCreateSchema>,
+  data: z.infer<typeof propertyCreateFormSchema>,
 ) {
   try {
     const { user } = await getAuth();
@@ -21,12 +22,18 @@ export async function createProperty(
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
 
-    const id = generateIdFromEntropySize(10);
-    await db.property.create({
-      data: {
-        id,
-        ...data,
-      },
+    const properties = data.types
+      .map((t, i) => t.properties)
+      .flat()
+      .map((p, i) => ({
+        ...p,
+        id: generateIdFromEntropySize(10),
+        type: data?.["types"]?.[i]?.["value"]!,
+      }));
+
+    console.log(properties);
+    await db.property.createMany({
+      data: properties,
     });
 
     revalidatePath("/", "layout");
