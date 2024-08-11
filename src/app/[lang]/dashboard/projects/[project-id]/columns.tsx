@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { Property } from "@prisma/client";
 import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table-row-actions";

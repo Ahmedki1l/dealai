@@ -3,12 +3,16 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Icons } from "@/components/icons";
 import { UserAuthRegisterForm } from "@/components/user-auth-register-form";
-import Link from "next/link";
+import { Link } from "@/components/link";
+import { getDictionary } from "@/lib/dictionaries";
+import { LocaleProps } from "@/types/locale";
 
-type RegisterProps = Readonly<{}>;
+type RegisterProps = Readonly<{ params: LocaleProps }>;
 
 export const metadata: Metadata = { title: "Register" };
-export default async function Register({}: RegisterProps) {
+export default async function Register({ params: { lang } }: RegisterProps) {
+  const dic = await getDictionary(lang);
+
   return (
     <div className="grid min-h-[700px] flex-1 items-center justify-center overflow-auto lg:grid-cols-2">
       {/* <BackButton variant="ghost" className="absolute right-4 top-4 gap-2" /> */}
@@ -80,7 +84,7 @@ export default async function Register({}: RegisterProps) {
         </div> */}
         <div className="grid gap-6">
           <Suspense>
-            <UserAuthRegisterForm />
+            <UserAuthRegisterForm dic={dic} />
           </Suspense>
 
           <div className="relative">
@@ -107,14 +111,16 @@ export default async function Register({}: RegisterProps) {
             .
           </p> */}
           <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
             <Link
               href="/login"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Sign in
-            </Link>{" "}
-            .
+              {
+                dic?.["auth"]?.["register"]?.[
+                  "already have an account? sign in."
+                ]
+              }
+            </Link>
           </p>
         </div>
       </section>

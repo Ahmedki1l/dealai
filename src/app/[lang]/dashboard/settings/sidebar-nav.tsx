@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             pathname === item.href
               ? "bg-muted hover:bg-muted"
               : "hover:bg-transparent hover:underline",
-            "justify-start"
+            "justify-start",
           )}
         >
           {item.title}

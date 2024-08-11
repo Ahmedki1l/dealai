@@ -26,6 +26,7 @@ import {
   Twitter,
   Image,
   Edit,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
@@ -69,6 +70,9 @@ export const Icons = {
   ),
   timer: ({ className, ...props }: IconProps) => (
     <Timer className={cn(IconsVariants({}), className)} {...props} />
+  ),
+  globe: ({ className, ...props }: IconProps) => (
+    <Globe className={cn(IconsVariants({}), className)} {...props} />
   ),
   timerOff: ({ className, ...props }: IconProps) => (
     <TimerOff className={cn(IconsVariants({}), className)} {...props} />

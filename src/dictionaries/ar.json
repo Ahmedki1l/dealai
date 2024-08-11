@@ -1,0 +1,40 @@
+{
+  "site": {
+    "name": "أتفاق الـ ai",
+    "description": "بنجمع كٌل محبين السفر والإستكشاف والمغامرات سوا عن طريق احداث مختلفة ومنوعة تناسب اهتمامات الناس المختلفة مع التركيز عالناس طول الرحلة."
+  },
+  "auth": {
+    "login": {
+      "don't have an account? sign up now": "لا تملك حساب؟ إشترك الآن.",
+      "or continue with": "أو المتابعة بـ",
+      "sign in with email": "المتابعة بالبريد الإلكتروني",
+      "sign in with google": "المتابعة بحساب جوجل",
+      "sign in with facebook": "المتابعة بحساب فيسبوك",
+      "forgot password": "نسيت كلمة المرور؟"
+    },
+    "register": {
+      "already have an account? sign in.": "تملك حساباً بالفعل؟ سجل الدخول.",
+      "sign up with email": "تسجيل الإشتراك بالبريد الإلكتروني",
+      "sign up with google": "تسجيل الإشتراك بحساب جوجل",
+      "sign up with facebook": "تسجيل الإشتراك بحساب فيسبوك"
+    }
+  },
+  "locale-switcher": {
+    "current locale of the website": "اللغة الحالية للموقع",
+    "en": "English (EN)",
+    "ar": "العربية (AR)",
+    "fr": "French (FR)",
+    "de": "Deautch (DE)"
+  },
+  "user-form": {
+    "name": {
+      "label": "الإسم بالكامل"
+    },
+    "email": {
+      "label": "البريد الإلكتروني"
+    },
+    "password": {
+      "label": "كلمة المرور"
+    }
+  }
+}

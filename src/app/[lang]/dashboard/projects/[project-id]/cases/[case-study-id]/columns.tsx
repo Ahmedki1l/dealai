@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table-row-actions";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { CaseStudy, Post } from "@prisma/client";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { PostDeleteButton } from "@/components/post-delete-button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { CardDescription, CardTitle } from "@/components/ui/card";

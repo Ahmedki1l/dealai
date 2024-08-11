@@ -1,0 +1,41 @@
+{
+  "site": {
+    "name": "Deal Ai",
+    "description": "We bring together all those who love exploration, and adventure through different and diverse events that suit different people's interests, while focusing on the people throughout the trip."
+  },
+  "auth": {
+    "login": {
+      "don't have an account? sign up now": "Don't have an account? Sign Up now",
+      "or continue with": "or continue with",
+      "sign in with email": "Sign In with Email",
+      "sign in with google": "Sign In with Google",
+      "sign in with facebook": "Sign In with Facebook",
+      "forgot password": "Forgot Password?"
+    },
+    "register": {
+      "already have an account? sign in.": "Already have an account? Sign In.",
+      "sign up with email": "Sign Up with Email",
+      "sign up with google": "Sign Up with Google",
+      "sign up with facebook": "Sign Up with Facebook"
+    }
+  },
+
+  "locale-switcher": {
+    "current locale of the website": "current locale of the website",
+    "en": "English (EN)",
+    "ar": "العربية (AR)",
+    "fr": "French (FR)",
+    "de": "Deautch (DE)"
+  },
+  "user-form": {
+    "name": {
+      "label": "Full Name"
+    },
+    "email": {
+      "label": "Email"
+    },
+    "password": {
+      "label": "Password"
+    }
+  }
+}

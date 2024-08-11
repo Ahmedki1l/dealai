@@ -15,6 +15,7 @@ import {
   userAuthLoginSchema,
   userAuthRegisterSchema,
 } from "@/validations/users";
+import { Dictionary } from "@/types/locale";
 
 type UserFormProps = {
   loading: boolean;
@@ -24,21 +25,26 @@ type UserFormProps = {
     any,
     undefined
   >;
-};
+} & Dictionary["user-form"];
 
 export const UserForm = {
-  name: function Component({ loading, form }: UserFormProps) {
+  name: function Component({
+    loading,
+    form,
+    dic: { "user-form": c },
+  }: UserFormProps) {
     return (
       <FormField
         control={form?.["control"]}
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Full Name</FormLabel>
+            <FormLabel>{c?.["name"]?.["label"]}</FormLabel>
             <FormControl>
               {/* @ts-ignore */}
               <Input
                 type="text"
+                dir="ltr"
                 placeholder="Joe Doe"
                 disabled={loading}
                 {...field}
@@ -50,17 +56,22 @@ export const UserForm = {
       />
     );
   },
-  email: function Component({ loading, form }: UserFormProps) {
+  email: function Component({
+    loading,
+    form,
+    dic: { "user-form": c },
+  }: UserFormProps) {
     return (
       <FormField
         control={form?.["control"]}
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{c?.["email"]?.["label"]}</FormLabel>
             <FormControl>
               <Input
                 type="email"
+                dir="ltr"
                 placeholder="name@example.com"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -75,18 +86,23 @@ export const UserForm = {
       />
     );
   },
-  password: function Component({ loading, form }: UserFormProps) {
+  password: function Component({
+    loading,
+    form,
+    dic: { "user-form": c },
+  }: UserFormProps) {
     return (
       <FormField
         control={form?.["control"]}
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Password</FormLabel>
+            <FormLabel>{c?.["password"]?.["label"]}</FormLabel>
             <FormControl>
               {/* @ts-ignore */}
               <Input
                 type="password"
+                dir="ltr"
                 placeholder="******"
                 autoCapitalize="none"
                 autoComplete="password"

@@ -12,7 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { CaseStudy, Post, Project, Property } from "@prisma/client";
 import { ProjectUpdateForm } from "@/components/project-update-form";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { ProjectDeleteButton } from "@/components/project-delete-button";
 import { CardTitle } from "@/components/ui/card";
 import { platforms } from "@/db/enums";

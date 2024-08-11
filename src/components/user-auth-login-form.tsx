@@ -10,14 +10,19 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Icons } from "@/components/icons";
 import { userAuthLoginSchema } from "@/validations/users";
-import { useRouter, useSearchParams } from "next/navigation";
 import { UserForm } from "@/components/user-form";
 import { signInWithGoogle, signInWithPassword } from "@/actions/users";
-import Link from "next/link";
+import { Link } from "@/components/link";
+import { Dictionary } from "@/types/locale";
 
-type UserAuthLoginFormProps = {};
+type UserAuthLoginFormProps = {} & Dictionary["auth"] & Dictionary["user-form"];
 
-export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
+export function UserAuthLoginForm({
+  dic: {
+    auth: { login: c },
+    ...dic
+  },
+}: UserAuthLoginFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [isFacebookLoading, setIsFacebookLoading] = useState<boolean>(false);
@@ -39,10 +44,12 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <UserForm.email
+              dic={dic}
               form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
             <UserForm.password
+              dic={dic}
               form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
@@ -52,7 +59,7 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
                 href="/forgot-password"
                 className="underline underline-offset-4 hover:text-primary"
               >
-                Forgot Password?
+                {c?.["forgot password"]}
               </Link>{" "}
             </p>
 
@@ -61,7 +68,7 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
               disabled={loading || isGoogleLoading || isFacebookLoading}
             >
               {loading && <Icons.spinner />}
-              Sign In with Email
+              {c?.["sign in with email"]}
             </Button>
           </form>
         </Form>
@@ -72,7 +79,7 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-              or continue with
+              {c?.["or continue with"]}
             </span>
           </div>
         </div>
@@ -83,18 +90,14 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
             className="w-full bg-blue-600 text-white hover:bg-blue-500 hover:text-white"
             onClick={async () => {
               setIsFacebookLoading(true);
-              toast.promise(
-                async () => {},
-                // signinWithGoogle()
-                {
-                  error: (err) => err?.["message"],
-                },
-              );
+              toast.promise(async () => {}, {
+                error: (err) => err?.["message"],
+              });
             }}
             disabled={loading || isGoogleLoading || isFacebookLoading}
           >
             {isFacebookLoading ? <Icons.spinner /> : <Icons.facebook />}
-            Sign In with Facebook
+            {c?.["sign in with facebook"]}
           </Button>
 
           <Button
@@ -110,7 +113,7 @@ export function UserAuthLoginForm({}: UserAuthLoginFormProps) {
             disabled={loading || isGoogleLoading || isFacebookLoading}
           >
             {isGoogleLoading ? <Icons.spinner /> : <Icons.google />}
-            Sign In with Google
+            {c?.["sign in with google"]}
           </Button>
         </div>
       </div>

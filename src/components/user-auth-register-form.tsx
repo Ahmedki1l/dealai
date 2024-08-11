@@ -12,10 +12,17 @@ import { Icons } from "@/components/icons";
 import { userAuthRegisterSchema } from "@/validations/users";
 import { UserForm } from "@/components/user-form";
 import { signInWithGoogle, signUpWithPassword } from "@/actions/users";
+import { Dictionary } from "@/types/locale";
 
-type UserAuthRegisterFormProps = {};
+type UserAuthRegisterFormProps = {} & Dictionary["auth"] &
+  Dictionary["user-form"];
 
-export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
+export function UserAuthRegisterForm({
+  dic: {
+    auth: { login: c },
+    ...dic
+  },
+}: UserAuthRegisterFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [isFacebookLoading, setIsFacebookLoading] = useState<boolean>(false);
@@ -37,15 +44,18 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <UserForm.name
+              dic={dic}
               form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
 
             <UserForm.email
+              dic={dic}
               form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
             <UserForm.password
+              dic={dic}
               form={form}
               loading={loading || isGoogleLoading || isFacebookLoading}
             />
@@ -55,7 +65,7 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
               disabled={loading || isGoogleLoading || isFacebookLoading}
             >
               {loading && <Icons.spinner />}
-              Sign Up with Email
+              {c?.["sign in with email"]}
             </Button>
           </form>
         </Form>
@@ -66,7 +76,7 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-              or continue with
+              {c?.["or continue with"]}
             </span>
           </div>
         </div>
@@ -77,18 +87,14 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
             className="w-full bg-blue-600 text-white hover:bg-blue-500 hover:text-white"
             onClick={async () => {
               setIsFacebookLoading(true);
-              toast.promise(
-                async () => {},
-                // signinWithGoogle()
-                {
-                  error: (err) => err?.["message"],
-                },
-              );
+              toast.promise(async () => {}, {
+                error: (err) => err?.["message"],
+              });
             }}
             disabled={loading || isGoogleLoading || isFacebookLoading}
           >
             {isFacebookLoading ? <Icons.spinner /> : <Icons.facebook />}
-            Sign Up with Facebook
+            {c?.["sign in with facebook"]}
           </Button>
 
           <Button
@@ -104,7 +110,7 @@ export function UserAuthRegisterForm({}: UserAuthRegisterFormProps) {
             disabled={loading || isGoogleLoading || isFacebookLoading}
           >
             {isGoogleLoading ? <Icons.spinner /> : <Icons.google />}
-            Sign Up with Google
+            {c?.["sign in with google"]}
           </Button>
         </div>
       </div>

@@ -2,16 +2,19 @@ import { cookies } from "next/headers";
 import { DashboardLayout as DashboardLayoutComponent } from "@/components/dashboard-layout";
 import { getAuth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { LocaleProps } from "@/types/locale";
 
 type DashboardLayoutProps = Readonly<{
   children: React.ReactNode;
+  params: LocaleProps;
 }>;
 
 export default async function DashboardLayout({
   children,
+  params: { lang },
 }: DashboardLayoutProps) {
   const { user } = await getAuth();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/${lang}/login`);
 
   // collapsing properties
   const layout = cookies().get("react-resizable-panels:layout");

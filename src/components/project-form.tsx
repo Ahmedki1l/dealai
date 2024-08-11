@@ -151,38 +151,38 @@ export const ProjectForm = {
       )}
     />
   ),
-  propertyTypes: ({ loading, form }: ProjectFormProps) => (
-    <FormField
-      control={form.control}
-      name="propertyTypes"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Type of Assets</FormLabel>
-          <FormControl>
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-              disabled={loading}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your project type" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {propertyTypes?.map((e, i) => (
-                  <SelectItem key={i} value={e?.["value"]}>
-                    {e?.["label"]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ),
+  // propertyTypes: ({ loading, form }: ProjectFormProps) => (
+  //   <FormField
+  //     control={form.control}
+  //     name="propertyTypes"
+  //     render={({ field }) => (
+  //       <FormItem>
+  //         <FormLabel>Type of Assets</FormLabel>
+  //         <FormControl>
+  //           <Select
+  //             onValueChange={field.onChange}
+  //             defaultValue={field.value}
+  //             disabled={loading}
+  //           >
+  //             <FormControl>
+  //               <SelectTrigger>
+  //                 <SelectValue placeholder="Select your project type" />
+  //               </SelectTrigger>
+  //             </FormControl>
+  //             <SelectContent>
+  //               {propertyTypes?.map((e, i) => (
+  //                 <SelectItem key={i} value={e?.["value"]}>
+  //                   {e?.["label"]}
+  //                 </SelectItem>
+  //               ))}
+  //             </SelectContent>
+  //           </Select>
+  //         </FormControl>
+  //         <FormMessage />
+  //       </FormItem>
+  //     )}
+  //   />
+  // ),
   platforms: function Component({
     loading,
     form,

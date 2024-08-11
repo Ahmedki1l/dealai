@@ -10,7 +10,7 @@ import {
 import { SelectItem } from "@/types";
 import { Icons } from "@/components/icons";
 import { useSelectedLayoutSegment } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/link";
 
 type SideNavProps = {
   isCollapsed: boolean;

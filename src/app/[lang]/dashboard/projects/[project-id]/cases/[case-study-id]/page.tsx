@@ -36,7 +36,7 @@ import { Image } from "@/components/image";
 import { Icons } from "@/components/icons";
 import { PostUpdateContentButton } from "@/components/post-update-content-button";
 import { PostUpdateScheduleButton } from "@/components/post-update-schedule-button";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { platforms } from "@/db/enums";
 
 type CaseStudyProps = Readonly<{
@@ -48,7 +48,7 @@ export default async function CaseStudy({
   params: { "project-id": projectId, "case-study-id": caseStudyId },
 }: CaseStudyProps) {
   const caseStudy = await db.caseStudy.findFirst({
-    include: { posts: {include:{image: true}}, project: true },
+    include: { posts: { include: { image: true } }, project: true },
     where: {
       id: caseStudyId,
     },

@@ -3,12 +3,18 @@ import type { Metadata } from "next";
 import { Icons } from "@/components/icons";
 import { Suspense } from "react";
 import { UserAuthLoginForm } from "@/components/user-auth-login-form";
-import Link from "next/link";
+import { Link } from "@/components/link";
+import { getDictionary } from "@/lib/dictionaries";
+import { LocaleProps } from "@/types/locale";
 
-type LoginProps = Readonly<{}>;
+type LoginProps = Readonly<{
+  params: LocaleProps;
+}>;
 
 export const metadata: Metadata = { title: "Login" };
-export default async function Login({}: LoginProps) {
+export default async function Login({ params: { lang } }: LoginProps) {
+  const dic = await getDictionary(lang);
+
   return (
     <div className="grid min-h-[700px] flex-1 items-center justify-center overflow-auto lg:grid-cols-2">
       {/* <BackButton variant="ghost" className="absolute right-4 top-4 gap-2" /> */}
@@ -39,8 +45,7 @@ export default async function Login({}: LoginProps) {
           <div className="mb-10">
             <img src="/images/Takaml.png" className="object-cover" alt="" />
           </div>
-          {/* 
-          <h1 className="text-2xl font-semibold tracking-tight">
+          {/* <h1 className="text-2xl font-semibold tracking-tight">
             Welcome Back! 🎉
           </h1> */}
           {/* <p className="text-sm text-muted-foreground">
@@ -50,18 +55,16 @@ export default async function Login({}: LoginProps) {
         </div>
         <div className="grid gap-6">
           <Suspense>
-            <UserAuthLoginForm />
+            <UserAuthLoginForm dic={dic} />
           </Suspense>
 
           <p className="text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
             <Link
               href="/register"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Sign up
-            </Link>{" "}
-            .
+              {dic?.["auth"]?.["login"]?.["don't have an account? sign up now"]}
+            </Link>
           </p>
         </div>
       </section>
