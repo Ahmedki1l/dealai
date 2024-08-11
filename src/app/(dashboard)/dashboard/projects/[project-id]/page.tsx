@@ -27,7 +27,7 @@ export default async function Project({
   const project = await db.project.findFirst({
     include: {
       caseStudy: { include: { posts: true } },
-      property: true,
+      properties: true,
     },
     where: {
       id: projectId,
@@ -123,7 +123,7 @@ export default async function Project({
           </div>
 
           <DataTable
-            data={project?.["property"]}
+            data={project?.["properties"]}
             columns={propertiesColumns}
             filterBy="title"
             filterOptions={[]}

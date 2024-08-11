@@ -49,79 +49,91 @@ export async function createPost(
     }).then((r) => r?.json());
 
     console.log(response);
-    // const daysToPost = noOfPostsPerWeek === 3 ? [0, 2, 4] : [0, 1, 2, 3, 4];
-    // const imageApiEndpoint = domain + "/image";
-    // let imageFetchPromises = [];
-    // let allPostDetails: Omit<Post, "imageId">[] = [];
+    const daysToPost = noOfPostsPerWeek === 3 ? [0, 2, 4] : [0, 1, 2, 3, 4];
+    const imageApiEndpoint = domain + "/image";
+    let imageFetchPromises = [];
+    let allPostDetails: Post[] = [];
 
-    // // uppercasing key, to match platform
-    // const responseData = Object.keys(response).reduce(
-    //   (acc, key) => {
-    //     acc[key.toUpperCase()] = response?.[key];
-    //     return acc;
-    //   },
-    //   {} as { [key: string]: { [key: string]: string }[] },
-    // );
+    // uppercasing key, to match platform
+    const responseData = Object.keys(response).reduce(
+      (acc, key) => {
+        acc[key.toUpperCase()] = response?.[key];
+        return acc;
+      },
+      {} as { [key: string]: { [key: string]: string }[] },
+    );
 
-    // for (const acc of platformsArr) {
-    //   const accountPosts = responseData?.[acc];
+    for (const acc of platformsArr) {
+      const accountPosts = responseData?.[acc];
 
-    //   if (!accountPosts?.["length"]) continue;
+      if (!accountPosts?.["length"]) continue;
 
-    //   // Calculate the starting date for each account to ensure unique dates
-    //   let currentDate = new Date();
-    //   currentDate.setDate(currentDate.getDate() + 1); // Start from the next day
+      // Calculate the starting date for each account to ensure unique dates
+      let currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1); // Start from the next day
 
-    //   for (let i = 0; i < accountPosts.length; i++) {
-    //     // Adjust currentDate to the next valid posting day
-    //     while (
-    //       currentDate.getDay() === 5 ||
-    //       currentDate.getDay() === 6 ||
-    //       !daysToPost.includes(currentDate.getDay())
-    //     ) {
-    //       currentDate.setDate(currentDate.getDate() + 1);
-    //     }
+      for (let i = 0; i < accountPosts.length; i++) {
+        // Adjust currentDate to the next valid posting day
+        while (
+          currentDate.getDay() === 5 ||
+          currentDate.getDay() === 6 ||
+          !daysToPost.includes(currentDate.getDay())
+        ) {
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
 
-    //     const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
-    //     currentDate.setHours(randomHour, 0, 0);
+        const randomHour = Math.floor(Math.random() * (20 - 11) + 11);
+        currentDate.setHours(randomHour, 0, 0);
 
-    //     const imagePrompt = { input: accountPosts[i][`Post${i + 1}`] };
-    //     const fetchPromise = fetch(imageApiEndpoint, {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(imagePrompt),
-    //     }).then((res) => res.json());
+        const imagePrompt = { input: accountPosts[i][`Post${i + 1}`] };
+        let imageResponse;
+        const fetchPromise = fetch(imageApiEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(imagePrompt),
+        }).then( async (res) => {
+          imageResponse = await res.json();
+          console.log("image response: ", response);
+          return response;
+        }).then((response)=>{
+          return db.image.create({
+            data:{
+              id: generateIdFromEntropySize(10),
+              src: response.url,
+              prompt: imagePrompt.input
+            }
+          })
+        });
 
-    //     imageFetchPromises.push(fetchPromise);
+        imageFetchPromises.push(fetchPromise);
 
-    //     fetchPromise.then((imageData) => {
-    //       allPostDetails.push({
-    //         ...data,
-    //         id: generateIdFromEntropySize(10),
-    //         title: `Post${i + 1}`,
-    //         content: accountPosts[i][`Post${i + 1}`],
-    //         platform: acc,
-    //         postAt: new Date(currentDate),
-    //         // image: imageData.url,
-    //       });
+        fetchPromise.then((imageData) => {
+          allPostDetails.push({
+            ...data,
+            id: generateIdFromEntropySize(10),
+            title: `Post${i + 1}`,
+            content: accountPosts[i][`Post${i + 1}`],
+            platform: acc,
+            postAt: new Date(currentDate),
+            imageId: imageData.id
+          });
+          // Increment the date for the next post
+          currentDate.setDate(currentDate.getDate() + 1);
+        });
+      }
+    }
 
-    //       // Increment the date for the next post
-    //       currentDate.setDate(currentDate.getDate() + 1);
-    //     });
-    //   }
-    // }
+    await Promise.all(imageFetchPromises);
 
-    // await Promise.all(imageFetchPromises);
-
-    // if (allPostDetails.length > 0) {
-    //   await db.post.createMany({
-    //     data: allPostDetails,
-    //   });
-
-    //   revalidatePath("/", "layout");
-    // } else {
-    //   console.log("No posts to create.");
-    // }
+    if (allPostDetails.length > 0) {
+      let createdPosts = await db.post.createMany({
+        data: allPostDetails,
+      });
+      console.log("created Posts: ", createdPosts);
+      revalidatePath("/", "layout");
+    } else {
+      console.log("No posts to create.");
+    }
   } catch (error: any) {
     console.log(error?.["message"]);
     if (error instanceof z.ZodError) return new ZodError(error);
