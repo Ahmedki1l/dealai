@@ -69,7 +69,7 @@ model Project {
   propertiesType PROPERTIES_TYPE @map("properties-type")
   platforms      PLATFORM[]
 
-  property  Property[]
+  properties  Property[]
   caseStudy CaseStudy[]
   user      User        @relation(references: [id], fields: [userId], onDelete: Cascade)
 
@@ -112,7 +112,7 @@ model Property {
   floors     String
   rooms      String
   bathrooms  String
-  recipients String
+  recipients String?
   garden     String?
   pool       String?
   view       String?

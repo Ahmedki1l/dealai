@@ -48,7 +48,7 @@ export default async function CaseStudy({
   params: { "project-id": projectId, "case-study-id": caseStudyId },
 }: CaseStudyProps) {
   const caseStudy = await db.caseStudy.findFirst({
-    include: { posts: true, project: true },
+    include: { posts: {include:{image: true}}, project: true },
     where: {
       id: caseStudyId,
     },
@@ -177,7 +177,7 @@ export default async function CaseStudy({
                               >
                                 <Image
                                   src={
-                                    // e?.["image"] ??
+                                    e?.["image"]?.src ??
                                     "https://images.unsplash.com/photo-1692166623396-1a44298e22fe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                   }
                                   alt=""
