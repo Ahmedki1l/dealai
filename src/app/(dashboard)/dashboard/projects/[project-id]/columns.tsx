@@ -8,7 +8,6 @@ import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table-row-actions";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { PropertyUpdateForm } from "@/components/property-update-form";
 import { PropertyDeleteButton } from "@/components/property-delete-button";
 
 import { CaseStudy, Post } from "@prisma/client";
@@ -220,14 +219,14 @@ export const propertiesColumns: ColumnDef<Property>[] = [
       return (
         <>
           <DataTableRowActions>
-            <PropertyUpdateForm property={r}>
+            {/* <PropertyUpdateForm property={r}>
               <Button
                 variant="ghost"
                 className="w-full justify-start px-2 text-start font-normal"
               >
                 Edit
               </Button>
-            </PropertyUpdateForm>
+            </PropertyUpdateForm> */}
 
             <PropertyDeleteButton asChild property={r}>
               <Button

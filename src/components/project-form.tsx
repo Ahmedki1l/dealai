@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { platforms, propertiesTypes } from "@/db/enums";
+import { platforms, propertyTypes } from "@/db/enums";
 
 type ProjectFormProps = {
   loading: boolean;
@@ -151,13 +151,13 @@ export const ProjectForm = {
       )}
     />
   ),
-  propertiesType: ({ loading, form }: ProjectFormProps) => (
+  propertyTypes: ({ loading, form }: ProjectFormProps) => (
     <FormField
       control={form.control}
-      name="propertiesType"
+      name="propertyTypes"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Type</FormLabel>
+          <FormLabel>Type of Assets</FormLabel>
           <FormControl>
             <Select
               onValueChange={field.onChange}
@@ -170,7 +170,7 @@ export const ProjectForm = {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {propertiesTypes?.map((e, i) => (
+                {propertyTypes?.map((e, i) => (
                   <SelectItem key={i} value={e?.["value"]}>
                     {e?.["label"]}
                   </SelectItem>
@@ -240,9 +240,12 @@ export const ProjectForm = {
                                   ?.getValues("platforms")
                                   ?.find((p) => p?.["value"] === e?.["value"])
                               }
-                              className="flex items-center gap-2"
+                              className="flex flex-row items-center gap-2"
                             >
-                              {Icon && <Icon />} {e?.["label"]}
+                              {Icon && (
+                                <Icon className="inline-flex ltr:mr-2 rtl:ml-2" />
+                              )}
+                              <span>{e?.["label"]}</span>
                             </SelectItem>
                           );
                         })}

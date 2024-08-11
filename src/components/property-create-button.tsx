@@ -83,65 +83,64 @@ export function PropertyCreateButton({
         <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-              <div>
-                <div className="flex items-center justify-between gap-4">
-                  <Label>Type of Assets</Label>
-                  <Button
-                    size="icon"
-                    onClick={() =>
-                      // @ts-ignore
-                      append({
-                        properties: [],
-                      })
-                    }
-                    disabled={
-                      fields?.["length"] === propertyTypes?.["length"]
-                      // ||
-                      // (limit ? fields?.["length"] == 4 : false)
-                    }
-                  >
-                    <Icons.add />
-                  </Button>
-                </div>
+              <div className="flex items-center justify-between gap-4">
+                <Label>Type of Assets</Label>
+                <Button
+                  size="icon"
+                  onClick={() =>
+                    // @ts-ignore
+                    append({
+                      properties: [],
+                    })
+                  }
+                  disabled={
+                    fields?.["length"] === propertyTypes?.["length"]
+                    // ||
+                    // (limit ? fields?.["length"] == 4 : false)
+                  }
+                >
+                  <Icons.add />
+                </Button>
+              </div>
 
-                {fields?.map((field, i) => (
-                  <Card key={i}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="w-full">
-                          <PropertyForm.type
-                            typeIndex={i}
-                            remove={remove}
-                            form={form as any}
-                            loading={loading}
-                          />
-                        </div>
-
-                        {form.watch(`types.${i}.value`) && (
-                          <Button
-                            size="icon"
-                            onClick={() =>
-                              // @ts-ignore
-                              field?.properties?.push({
-                                projectId: project?.["id"],
-                              })
-                            }
-                          >
-                            <Icons.add />
-                          </Button>
-                        )}
+              {fields?.map((field, i) => (
+                <Card key={i}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="w-full">
+                        <PropertyForm.type
+                          typeIndex={i}
+                          remove={remove}
+                          form={form as any}
+                          loading={loading}
+                        />
                       </div>
-                    </CardHeader>
 
-                    {field?.["properties"]?.["length"] ? (
-                      <CardContent className="space-y-4">
-                        {field?.properties?.map((_, j) => (
-                          <Card key={j} className="border-green-500">
-                            <CardHeader>
-                              <div className="flex items-center justify-between gap-4">
-                                <CardTitle>Unit {j + 1}</CardTitle>
+                      {form.watch(`types.${i}.value`) && (
+                        <Button
+                          size="icon"
+                          onClick={() =>
+                            // @ts-ignore
+                            field?.properties?.push({
+                              projectId: project?.["id"],
+                            })
+                          }
+                        >
+                          <Icons.add />
+                        </Button>
+                      )}
+                    </div>
+                  </CardHeader>
 
-                                {/* <Button
+                  {field?.["properties"]?.["length"] ? (
+                    <CardContent className="space-y-4">
+                      {field?.properties?.map((_, j) => (
+                        <Card key={j} className="border-green-500">
+                          <CardHeader>
+                            <div className="flex items-center justify-between gap-4">
+                              <CardTitle>Unit {j + 1}</CardTitle>
+
+                              {/* <Button
                                   size="icon"
                                   onClick={() =>
                                     // @ts-ignore
@@ -155,83 +154,83 @@ export function PropertyCreateButton({
                                 >
                                   <Icons.x />
                                 </Button> */}
-                              </div>
-                            </CardHeader>
+                            </div>
+                          </CardHeader>
 
-                            <CardContent className="grid grid-cols-3 gap-4">
-                              <PropertyForm.title
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.units
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.space
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.finishing
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.floors
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.rooms
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              <PropertyForm.bathrooms
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
+                          <CardContent className="grid grid-cols-3 gap-4">
+                            <PropertyForm.title
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.units
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.space
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.finishing
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.floors
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.rooms
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            <PropertyForm.bathrooms
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
 
-                              <PropertyForm.recipients
-                                typeIndex={i}
-                                propertyIndex={j}
-                                form={form as any}
-                                loading={loading}
-                              />
-                              {form.watch(`types.${i}.value`) === "VILLA" ? (
-                                <>
-                                  <PropertyForm.garden
-                                    typeIndex={i}
-                                    propertyIndex={j}
-                                    form={form as any}
-                                    loading={loading}
-                                  />
-                                  <PropertyForm.pool
-                                    typeIndex={i}
-                                    propertyIndex={j}
-                                    form={form as any}
-                                    loading={loading}
-                                  />
-                                  <PropertyForm.view
-                                    typeIndex={i}
-                                    propertyIndex={j}
-                                    form={form as any}
-                                    loading={loading}
-                                  />
-                                </>
-                              ) : null}
-                            </CardContent>
-                            {/* <CardFooter>
+                            <PropertyForm.recipients
+                              typeIndex={i}
+                              propertyIndex={j}
+                              form={form as any}
+                              loading={loading}
+                            />
+                            {form.watch(`types.${i}.value`) === "VILLA" ? (
+                              <>
+                                <PropertyForm.garden
+                                  typeIndex={i}
+                                  propertyIndex={j}
+                                  form={form as any}
+                                  loading={loading}
+                                />
+                                <PropertyForm.pool
+                                  typeIndex={i}
+                                  propertyIndex={j}
+                                  form={form as any}
+                                  loading={loading}
+                                />
+                                <PropertyForm.view
+                                  typeIndex={i}
+                                  propertyIndex={j}
+                                  form={form as any}
+                                  loading={loading}
+                                />
+                              </>
+                            ) : null}
+                          </CardContent>
+                          {/* <CardFooter>
                             <Button
                               size="icon"
                               onClick={() => {
@@ -244,13 +243,12 @@ export function PropertyCreateButton({
                               <Icons.x />
                             </Button>
                           </CardFooter> */}
-                          </Card>
-                        ))}
-                      </CardContent>
-                    ) : null}
-                  </Card>
-                ))}
-              </div>
+                        </Card>
+                      ))}
+                    </CardContent>
+                  ) : null}
+                </Card>
+              ))}
             </form>
           </Form>
         </>

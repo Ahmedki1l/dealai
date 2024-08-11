@@ -4,28 +4,48 @@ import { db } from "@/db";
 import { getAuth } from "@/lib/auth";
 import { RequiresLoginError, ZodError } from "@/lib/exceptions";
 import {
-  projectCreateSchema,
+  projectCreateFormSchema,
   projectDeleteSchema,
   projectUpdateSchema,
-  // projectDeleteSchema,
-  // projectUpdateSchema,
 } from "@/validations/projects";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateIdFromEntropySize } from "lucia";
 
-export async function createProject(data: z.infer<typeof projectCreateSchema>) {
+export async function createProject({
+  types,
+  platforms,
+  ...data
+}: z.infer<typeof projectCreateFormSchema>) {
   try {
     const { user } = await getAuth();
 
     if (!user) throw new RequiresLoginError();
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
 
+    const properties = types
+      .map((t) =>
+        t.properties.map(({ projectId, ...p }) => ({
+          ...p,
+          id: generateIdFromEntropySize(10),
+          type: t?.["value"],
+        })),
+      )
+      .flat();
+
     const id = generateIdFromEntropySize(10);
     await db.project.create({
       data: {
-        id,
         ...data,
+        id,
+        userId: user?.["id"],
+        platforms: platforms.map((e) => e?.["value"]),
+        propertyTypes: types?.map((e) => e?.["value"]),
+        properties: {
+          createMany: {
+            data: properties,
+          },
+        },
       },
     });
 
@@ -47,14 +67,14 @@ export async function updateProject({
     const user = await getAuth();
     if (!user) throw new RequiresLoginError();
 
-    await db.project.update({
-      data,
-      where: {
-        id,
-      },
-    });
+    // await db.project.update({
+    //   data,
+    //   where: {
+    //     id,
+    //   },
+    // });
 
-    revalidatePath("/", "layout");
+    // revalidatePath("/", "layout");
   } catch (error: any) {
     console.log(error?.["message"]);
     if (error instanceof z.ZodError) return new ZodError(error);

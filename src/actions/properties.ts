@@ -23,15 +23,15 @@ export async function createProperty(
     // if (user?.["id"] != data?.["userId"]) throw new RequiresAccessError();
 
     const properties = data.types
-      .map((t, i) => t.properties)
-      .flat()
-      .map((p, i) => ({
-        ...p,
-        id: generateIdFromEntropySize(10),
-        type: data?.["types"]?.[i]?.["value"]!,
-      }));
+      .map((t) =>
+        t.properties.map((p) => ({
+          ...p,
+          id: generateIdFromEntropySize(10),
+          type: t?.["value"],
+        })),
+      )
+      .flat();
 
-    console.log(properties);
     await db.property.createMany({
       data: properties,
     });

@@ -38,6 +38,11 @@ export function ProjectUpdateForm({
             value: p,
           }))
         : [],
+      propertyTypes: project?.["propertyTypes"]
+        ? project?.["propertyTypes"]?.map((p) => ({
+            value: p,
+          }))
+        : [],
     },
   });
 
@@ -47,6 +52,7 @@ export function ProjectUpdateForm({
       updateProject({
         ...data,
         platforms: data?.["platforms"].map((e) => e?.["value"]),
+        propertyTypes: data?.["propertyTypes"].map((e) => e?.["value"]),
       }),
       {
         finally: () => setLoading(false),
@@ -91,7 +97,6 @@ export function ProjectUpdateForm({
                 <ProjectForm.spaces form={form as any} loading={loading} />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <ProjectForm.type form={form as any} loading={loading} />
                 <ProjectForm.platforms form={form as any} loading={loading} />
               </div>
             </form>

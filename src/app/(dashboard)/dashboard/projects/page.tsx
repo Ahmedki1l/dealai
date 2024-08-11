@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Projects" };
 export default async function Projects({}: ProjectsProps) {
   const user = (await getAuth())?.["user"]!;
   const projects = await db.project.findMany({
-    include: { caseStudy: { include: { posts: true } } },
+    include: { caseStudy: { include: { posts: true } }, properties: true },
     where: {
       userId: user?.["id"],
     },

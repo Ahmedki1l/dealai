@@ -46,12 +46,7 @@ enum PLATFORM {
   INSTAGRAM
   TWITTER
 }
-
-enum PROPERTIES_TYPE {
-  APARTMENTS
-  VILLAS
-  COMPOUND
-}
+ 
 
 model Project {
   id          String  @id @map("_id")
@@ -66,7 +61,7 @@ model Project {
 
   createdAt DateTime @default(now())
 
-  propertiesType PROPERTIES_TYPE @map("properties-type")
+  propertyTypes  PROPERTY_TYPE[] @map("property-types")
   platforms      PLATFORM[]
 
   properties  Property[]

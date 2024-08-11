@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { CaseStudy, Post, Project } from "@prisma/client";
+import { CaseStudy, Post, Project, Property } from "@prisma/client";
 import { ProjectUpdateForm } from "@/components/project-update-form";
 import Link from "next/link";
 import { ProjectDeleteButton } from "@/components/project-delete-button";
@@ -18,7 +18,10 @@ import { CardTitle } from "@/components/ui/card";
 import { platforms } from "@/db/enums";
 
 export const columns: ColumnDef<
-  Project & { caseStudy: (CaseStudy & { posts: Post[] })[] }
+  Project & {
+    caseStudy: (CaseStudy & { posts: Post[] })[];
+    properties: Property[];
+  }
 >[] = [
   {
     accessorKey: "title",
@@ -43,7 +46,7 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "caseStudy",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Case Study" />
     ),
@@ -59,7 +62,7 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "caseStudy",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Target Audience" />
     ),
@@ -75,7 +78,23 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "properties",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Properties" />
+    ),
+    cell: ({ row: { original: r } }) => (
+      <Link
+        href={`/dashboard/projects/${r?.["id"]}`}
+        className={buttonVariants({ variant: "link" })}
+      >
+        {r?.["properties"]?.["length"]}
+      </Link>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "caseStudy",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Posts" />
     ),
